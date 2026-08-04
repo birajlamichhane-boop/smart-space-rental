@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-main: #0A0A0B;
+    --bg-surface: #141416;
+    --bg-elevated: #1C1C1F;
+    --border-color: #262626;
+    --brand-red: #E11D2E;
+    --brand-hover: #FF2E44;
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: #F5F5F5;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0A0A0B;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #262626;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #E11D2E;
+  }
+}
+
+@layer utilities {
+  /* Ambient static glow behind hero and dashboard stat rows */
+  .ambient-glow {
+    position: absolute;
+    width: 600px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(225, 29, 46, 0.09) 0%, rgba(225, 29, 46, 0) 70%);
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Card signature hover effect */
+  .card-hover {
+    transition: transform 200ms ease-out, border-color 200ms ease-out, box-shadow 200ms ease-out;
+  }
+  .card-hover:hover {
+    transform: translateY(-2px);
+    border-color: rgba(225, 29, 46, 0.4);
+    box-shadow: 0 8px 30px -4px rgba(225, 29, 46, 0.12);
+  }
+
+  /* Sticky glass navbar */
+  .glass-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(12px);
+    background-color: rgba(10, 10, 11, 0.75);
+    border-bottom: 1px solid #262626;
+  }
+
+  /* Shimmer Loading Sweep */
+  .skeleton-shimmer {
+    position: relative;
+    overflow: hidden;
+    background-color: #1C1C1F;
+  }
+  .skeleton-shimmer::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0,
+      rgba(255, 255, 255, 0.05) 20%,
+      rgba(255, 255, 255, 0.1) 60%,
+      rgba(255, 255, 255, 0)
+    );
+    animation: shimmer 1.5s infinite;
+    content: '';
+  }
+}
