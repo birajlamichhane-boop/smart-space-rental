@@ -1,4 +1,4 @@
--- FULL DATABASE SETUP (Schema + Demo Users & Properties)
+-- FULL DATABASE SETUP (Schema + Demo Users & 23 Properties)
 -- Copy and paste this ENTIRE file into Supabase SQL Editor & click RUN!
 
 -- ========================================================
@@ -114,7 +114,6 @@ BEGIN
 
   RETURN new;
 EXCEPTION WHEN OTHERS THEN
-  -- Prevent trigger errors from failing Auth signups
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -259,30 +258,58 @@ INSERT INTO auth.users (
 ON CONFLICT (id) DO NOTHING;
 
 -- ========================================================
--- 6. DEMO PROPERTIES & DETAILS
+-- 6. 23 DEMO PROPERTIES (12 FLATS, 6 VENUES, 5 STUDIOS)
 -- ========================================================
 INSERT INTO public.properties (id, owner_id, type, title, description, location, base_price, status) VALUES
 ('e1111111-1111-4111-e111-111111111111', 'b1111111-1111-4111-b111-111111111111', 'flat', 'Skyline Luxury Penthouse Loft', 'Ultra-modern 2-bedroom penthouse with panoramic city skyline views, private terrace, high-speed fiber internet, and smart home automation.', 'Downtown Financial District', 250, 'approved'),
-('e2222222-2222-4222-e222-222222222222', 'b1111111-1111-4111-b111-111111111111', 'venue', 'Grand Glasshouse Event Pavilion', 'Stunning glass-encased event venue perfect for corporate galas, private dinners, product launches, and luxury wedding receptions.', 'Waterfront Park Avenue', 850, 'approved'),
-('e3333333-3333-4333-e333-333333333333', 'b1111111-1111-4111-b111-111111111111', 'studio', 'Neon Light Photography & Creator Studio', 'Fully equipped creative studio with cyclorama wall, professional RGB lighting grid, podcasting suite, and private green room.', 'SoHo Creative Hub', 180, 'approved'),
 ('e4444444-4444-4444-e444-444444444444', 'b2222222-2222-4222-b222-222222222222', 'flat', 'Minimalist Waterfront Studio Apartment', 'Sleek, minimalist residential flat with floor-to-ceiling windows, rain shower, fully stocked chef kitchen, and private parking space.', 'Marina Bay District', 190, 'approved'),
-('e5555555-5555-4555-e555-555555555555', 'b2222222-2222-4222-b222-222222222222', 'venue', 'The Industrial Brick Warehouse Venue', 'Rustic chic exposed-brick venue spanning 4,000 sq ft with industrial lighting, full sound system, and stage setup.', 'Arts District', 600, 'approved')
+('f1010000-0000-4000-a000-000000000001', 'b1111111-1111-4111-b111-111111111111', 'flat', 'Highline Modern Duplex Flat', 'Spacious two-story duplex flat with architectural floating stairs, double-height ceiling, private balcony, and 24/7 concierge.', 'Hudson Yards West', 310, 'approved'),
+('f1020000-0000-4000-a000-000000000002', 'b2222222-2222-4222-b222-222222222222', 'flat', 'Boho-Chic Midtown Garden Residence', 'Cozy garden-level residence with private brick patio, lush indoor plants, oak hardwood floors, and ambient warm fireplace.', 'Midtown West', 175, 'approved'),
+('f1030000-0000-4000-a000-000000000003', 'b1111111-1111-4111-b111-111111111111', 'flat', 'Urban Industrial Loft & Terrace', 'Authentic converted factory loft featuring steel beams, polished concrete floors, custom acoustic insulation, and skyline rooftop access.', 'Tribeca Arts District', 220, 'approved'),
+('f1040000-0000-4000-a000-000000000004', 'b2222222-2222-4222-b222-222222222222', 'flat', 'Scandinavian Eco Smart Flat', 'Energy-efficient 1-bedroom flat built with sustainable pine, smart climate control, workstation nook, and sunlit bay windows.', 'Greenpoint East', 160, 'approved'),
+('f1050000-0000-4000-a000-000000000005', 'b1111111-1111-4111-b111-111111111111', 'flat', 'Metropolitan Parkview Apartment', 'Elegant corner flat directly overlooking city park grounds. Features marble bathroom, sub-zero appliances, and designer furnishings.', 'Central Park South', 280, 'approved'),
+('f1060000-0000-4000-a000-000000000006', 'b2222222-2222-4222-b222-222222222222', 'flat', 'Sunset Terrace Executive Suite', 'Premium executive suite featuring expansive outdoor dining lounge, private Jacuzzi, wine cooler, and keyless smart entry.', 'Financial Plaza', 340, 'approved'),
+('f1070000-0000-4000-a000-000000000007', 'b1111111-1111-4111-b111-111111111111', 'flat', 'The Glass Horizon Micro Suite', 'Ultra-functional compact smart flat designed for remote professionals, featuring ergonomic sit-stand desk and gigabit Wi-Fi.', 'Tech Corridor North', 145, 'approved'),
+('f1080000-0000-4000-a000-000000000008', 'b2222222-2222-4222-b222-222222222222', 'flat', 'Heritage Brick Residential Studio', 'Charming brownstone residential flat with exposed original red brick, stained glass accents, and vintage clawfoot bathtub.', 'Historic Quarter', 185, 'approved'),
+('f1090000-0000-4000-a000-000000000009', 'b1111111-1111-4111-b111-111111111111', 'flat', 'Panoramic Bay Highrise Suite', 'Luxury highrise corner residence with floor-to-ceiling glass wall framing ocean sunsets, private sauna, and valet parking.', 'Coastal Promenade', 295, 'approved'),
+('f1100000-0000-4000-a000-000000000010', 'b2222222-2222-4222-b222-222222222222', 'flat', 'Cobblestone Village Garden Flat', 'Quiet European-style residential flat nestled in cobblestone alley, complete with ivy-covered private courtyard and herb garden.', 'Old Town Square', 210, 'approved'),
+
+('e2222222-2222-4222-e222-222222222222', 'b1111111-1111-4111-b111-111111111111', 'venue', 'Grand Glasshouse Event Pavilion', 'Stunning glass-encased event venue perfect for corporate galas, private dinners, product launches, and luxury wedding receptions.', 'Waterfront Park Avenue', 850, 'approved'),
+('e5555555-5555-4555-e555-555555555555', 'b2222222-2222-4222-b222-222222222222', 'venue', 'The Industrial Brick Warehouse Venue', 'Rustic chic exposed-brick venue spanning 4,000 sq ft with industrial lighting, full sound system, and stage setup.', 'Arts District', 600, 'approved'),
+('v2010000-0000-4000-a000-000000000001', 'b1111111-1111-4111-b111-111111111111', 'venue', 'Velvet Lounge & Private Ballroom', 'Opulent velvet-adorned ballroom with crystal chandeliers, private cocktail bar, VIP lounge area, and built-in DJ booth.', 'Grand Boulevard', 950, 'approved'),
+('v2020000-0000-4000-a000-000000000002', 'b2222222-2222-4222-b222-222222222222', 'venue', 'Rooftop Terrace & Sunset Pavilion', 'Open-air highrise rooftop venue with 360-degree skyline view, ambient fire pits, weatherproof cabanas, and catering kitchen prep area.', 'Highrise Tower Top', 780, 'approved'),
+('v2030000-0000-4000-a000-000000000003', 'b1111111-1111-4111-b111-111111111111', 'venue', 'Underground Cellar & Acoustic Hall', 'Atmospheric subterranean venue with vaulted brick ceilings, acoustic treatment, warm mood lighting, and private entrance.', 'Old Substation Alley', 520, 'approved'),
+('v2040000-0000-4000-a000-000000000004', 'b2222222-2222-4222-b222-222222222222', 'venue', 'Botanical Garden Courtyard Pavilion', 'Lush glass greenhouse venue surrounded by exotic plants and fountains, perfect for pop-up exhibitions, cocktail parties, and photo shoots.', 'Conservatory Grounds', 710, 'approved'),
+
+('e3333333-3333-4333-e333-333333333333', 'b1111111-1111-4111-b111-111111111111', 'studio', 'Neon Light Photography & Creator Studio', 'Fully equipped creative studio with cyclorama wall, professional RGB lighting grid, podcasting suite, and private green room.', 'SoHo Creative Hub', 180, 'approved'),
+('s3010000-0000-4000-a000-000000000001', 'b2222222-2222-4222-b222-222222222222', 'studio', 'Pop-Up Boutique Retail Gallery', 'Street-level retail showroom with high foot-traffic storefront windows, modular display racks, POS checkout counter, and fitting rooms.', 'Fashion District Avenue', 240, 'approved'),
+('s3020000-0000-4000-a000-000000000002', 'b1111111-1111-4111-b111-111111111111', 'studio', 'Acoustic Podcasting & Broadcast Studio', 'Sound-isolated podcast suite with Shure SM7B microphones, Rodecaster Pro II console, 4K camera multi-cam setup, and live streaming gear.', 'Media Village Tech Hub', 160, 'approved'),
+('s3030000-0000-4000-a000-000000000003', 'b2222222-2222-4222-b222-222222222222', 'studio', 'Artisan Craft & Design Atelier', 'Sun-drenched studio space with drafting tables, ceramics wheel, heavy-duty workbenches, utility sinks, and gallery lighting grid.', 'Designers Square', 210, 'approved'),
+('s3040000-0000-4000-a000-000000000004', 'b1111111-1111-4111-b111-111111111111', 'studio', 'High-Fashion Runway & Fitting Studio', 'Sleek fashion studio with 50ft catwalk runway, full-length mirror wall, steamer equipment, makeup stations, and private changing rooms.', 'Garment District', 290, 'approved')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.property_images (id, property_id, storage_path) VALUES
 (gen_random_uuid(), 'e1111111-1111-4111-e111-111111111111', 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80'),
-(gen_random_uuid(), 'e2222222-2222-4222-e222-222222222222', 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1200&q=80'),
-(gen_random_uuid(), 'e3333333-3333-4333-e333-333333333333', 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80'),
 (gen_random_uuid(), 'e4444444-4444-4444-e444-444444444444', 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80'),
-(gen_random_uuid(), 'e5555555-5555-4555-e555-555555555555', 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1200&q=80')
-ON CONFLICT (id) DO NOTHING;
-
-INSERT INTO public.pricing_rules (id, property_id, rate_type, amount) VALUES
-(gen_random_uuid(), 'e1111111-1111-4111-e111-111111111111', 'hourly', 35),
-(gen_random_uuid(), 'e1111111-1111-4111-e111-111111111111', 'daily', 250),
-(gen_random_uuid(), 'e1111111-1111-4111-e111-111111111111', 'monthly', 5500),
-(gen_random_uuid(), 'e2222222-2222-4222-e222-222222222222', 'hourly', 120),
-(gen_random_uuid(), 'e2222222-2222-4222-e222-222222222222', 'daily', 850),
-(gen_random_uuid(), 'e3333333-3333-4333-e333-333333333333', 'hourly', 25),
-(gen_random_uuid(), 'e3333333-3333-4333-e333-333333333333', 'daily', 180)
+(gen_random_uuid(), 'f1010000-0000-4000-a000-000000000001', 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), 'f1020000-0000-4000-a000-000000000002', 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), 'f1030000-0000-4000-a000-000000000003', 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), 'f1040000-0000-4000-a000-000000000004', 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), 'f1050000-0000-4000-a000-000000000005', 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), 'f1060000-0000-4000-a000-000000000006', 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), 'f1070000-0000-4000-a000-000000000007', 'https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), 'f1080000-0000-4000-a000-000000000008', 'https://images.unsplash.com/photo-1536376072261-38c75010e6c9?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), 'f1090000-0000-4000-a000-000000000009', 'https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), 'f1100000-0000-4000-a000-000000000010', 'https://images.unsplash.com/photo-1567496898669-ee935f5f647a?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), 'e2222222-2222-4222-e222-222222222222', 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), 'e5555555-5555-4555-e555-555555555555', 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), 'v2010000-0000-4000-a000-000000000001', 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), 'v2020000-0000-4000-a000-000000000002', 'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), 'v2030000-0000-4000-a000-000000000003', 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), 'v2040000-0000-4000-a000-000000000004', 'https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), 'e3333333-3333-4333-e333-333333333333', 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), 's3010000-0000-4000-a000-000000000001', 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), 's3020000-0000-4000-a000-000000000002', 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), 's3030000-0000-4000-a000-000000000003', 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), 's3040000-0000-4000-a000-000000000004', 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=80')
 ON CONFLICT (id) DO NOTHING;
