@@ -1,8 +1,8 @@
--- FULL DATABASE SETUP (Schema + Demo Seed Data)
+-- FULL DATABASE SETUP (Schema + Demo Users & Properties)
 -- Copy and paste this ENTIRE file into Supabase SQL Editor & click RUN!
 
 -- ========================================================
--- 1. EXTENSION
+-- 1. EXTENSIONS
 -- ========================================================
 CREATE EXTENSION IF NOT EXISTS btree_gist;
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
 
 CREATE TABLE IF NOT EXISTS public.properties (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  owner_id uuid REFERENCES public.profiles(id),
+  owner_id uuid REFERENCES public.profiles(id) ON DELETE SET NULL,
   type text NOT NULL CHECK (type IN ('flat','venue','studio')),
   title text NOT NULL,
   description text,
@@ -215,7 +215,7 @@ CREATE POLICY "invoice visible to involved parties" ON public.invoices FOR SELEC
     WHERE b.id = booking_id AND (
       b.customer_id = auth.uid() OR
       EXISTS (SELECT 1 FROM public.properties pr WHERE pr.id = b.property_id AND pr.owner_id = auth.uid()) OR
-      EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role IN ('admin','staff'))
+      EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = b.property_id AND p.role IN ('admin','staff'))
     )
   )
 );
@@ -227,16 +227,24 @@ DROP POLICY IF EXISTS "own wishlist" ON public.wishlist;
 CREATE POLICY "own wishlist" ON public.wishlist FOR ALL USING (customer_id = auth.uid());
 
 -- ========================================================
--- 5. DEMO SEED DATA (PROPERTIES + RATES + REVIEWS)
+-- 5. SEED AUTH USERS FIRST (AUTO-POPINATES PROFILES VIA TRIGGER)
 -- ========================================================
+INSERT INTO auth.users (
+  id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at
+) VALUES
+('a1111111-1111-1111-1111-111111111111', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'admin@smartspace.com', crypt('Password123!', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Alex Vance (Admin)","role":"admin"}', now(), now()),
+('a2222222-2222-2222-2222-222222222222', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'admin2@smartspace.com', crypt('Password123!', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Sarah Jenkins (Admin)","role":"admin"}', now(), now()),
+('b1111111-1111-1111-1111-111111111111', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'owner@smartspace.com', crypt('Password123!', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Marcus Sterling (Owner)","role":"owner"}', now(), now()),
+('b2222222-2222-2222-2222-222222222222', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'owner2@smartspace.com', crypt('Password123!', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Elena Rostova (Owner)","role":"owner"}', now(), now()),
+('c1111111-1111-1111-1111-111111111111', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'staff@smartspace.com', crypt('Password123!', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"David Miller (Staff)","role":"staff"}', now(), now()),
+('c2222222-2222-2222-2222-222222222222', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'staff2@smartspace.com', crypt('Password123!', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Rachel Green (Staff)","role":"staff"}', now(), now()),
+('d1111111-1111-1111-1111-111111111111', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'customer@smartspace.com', crypt('Password123!', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Jordan Lee (Customer)","role":"customer"}', now(), now()),
+('d2222222-2222-2222-2222-222222222222', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'customer2@smartspace.com', crypt('Password123!', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Claire Bennett (Customer)","role":"customer"}', now(), now())
+ON CONFLICT (id) DO NOTHING;
 
--- Sample Owners (Fixed UUIDs linked to profiles if created)
-INSERT INTO public.profiles (id, role, full_name, phone) VALUES
-('b1111111-1111-1111-1111-111111111111', 'owner', 'Marcus Sterling (Owner)', '+1 555-0201'),
-('b2222222-2222-2222-2222-222222222222', 'owner', 'Elena Rostova (Owner)', '+1 555-0202'),
-('d1111111-1111-1111-1111-111111111111', 'customer', 'Jordan Lee (Customer)', '+1 555-0401')
-ON CONFLICT (id) DO UPDATE SET role = EXCLUDED.role;
-
+-- ========================================================
+-- 6. DEMO PROPERTIES & DETAILS
+-- ========================================================
 INSERT INTO public.properties (id, owner_id, type, title, description, location, base_price, status) VALUES
 ('p1111111-1111-1111-1111-111111111111', 'b1111111-1111-1111-1111-111111111111', 'flat', 'Skyline Luxury Penthouse Loft', 'Ultra-modern 2-bedroom penthouse with panoramic city skyline views, private terrace, high-speed fiber internet, and smart home automation.', 'Downtown Financial District', 250, 'approved'),
 ('p2222222-2222-2222-2222-222222222222', 'b1111111-1111-1111-1111-111111111111', 'venue', 'Grand Glasshouse Event Pavilion', 'Stunning glass-encased event venue perfect for corporate galas, private dinners, product launches, and luxury wedding receptions.', 'Waterfront Park Avenue', 850, 'approved'),
