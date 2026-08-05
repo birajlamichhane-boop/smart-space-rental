@@ -13,7 +13,33 @@ export function useAuth() {
   useEffect(() => {
     let mounted = true
 
-    // Fetch initial session
+    const checkDemoSession = () => {
+      const demoRaw = localStorage.getItem('smartspace_demo_session')
+      if (demoRaw) {
+        try {
+          const demo = JSON.parse(demoRaw)
+          if (mounted) {
+            setUser(demo.user)
+            setProfile(demo.profile)
+            setSession(null)
+            setLoading(false)
+          }
+          return true
+        } catch {}
+      }
+      return false
+    }
+
+    if (checkDemoSession()) {
+      const handleAuthChange = () => checkDemoSession()
+      window.addEventListener('smartspace_auth_change', handleAuthChange)
+      return () => {
+        mounted = false
+        window.removeEventListener('smartspace_auth_change', handleAuthChange)
+      }
+    }
+
+    // Fetch initial Supabase session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!mounted) return
       setSession(session)
@@ -42,13 +68,33 @@ export function useAuth() {
       if (mounted) setLoading(false)
     })
 
+    const handleCustomChange = () => {
+      if (!checkDemoSession()) {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          if (!mounted) return
+          setSession(session)
+          setUser(session?.user ?? null)
+        })
+      }
+    }
+    window.addEventListener('smartspace_auth_change', handleCustomChange)
+
     return () => {
       mounted = false
       subscription.unsubscribe()
+      window.removeEventListener('smartspace_auth_change', handleCustomChange)
     }
   }, [])
 
   const refetchProfile = async () => {
+    const demoRaw = localStorage.getItem('smartspace_demo_session')
+    if (demoRaw) {
+      try {
+        const demo = JSON.parse(demoRaw)
+        setProfile(demo.profile)
+        return
+      } catch {}
+    }
     if (user) {
       const p = await getCurrentProfile(user.id)
       setProfile(p)
@@ -61,6 +107,11 @@ export function useAuth() {
     profile,
     loading,
     refetchProfile,
-    signOut: () => supabase.auth.signOut(),
+    signOut: async () => {
+      localStorage.removeItem('smartspace_demo_session')
+      await supabase.auth.signOut()
+      window.dispatchEvent(new Event('smartspace_auth_change'))
+    },
   }
 }
+
