@@ -77,19 +77,54 @@ export const RegisterPage: React.FC = () => {
     }
   }
 
-  const handleQuickDemoLogin = async (demoEmail: string) => {
+  const handleQuickDemoLogin = async (demoEmail: string, demoRole: string, demoName: string) => {
     setLoading(true)
+    setErrorMsg(null)
+    const demoPassword = 'Password123!'
+
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      // 1. Try direct sign in
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email: demoEmail,
-        password: 'Password123!',
+        password: demoPassword,
       })
 
-      if (error) throw error
-      navigate('/dashboard')
+      if (!signInError && signInData.session) {
+        navigate('/dashboard')
+        return
+      }
+
+      // 2. Auto-create account via GoTrue API if missing or hash mismatched
+      const { data: signUpData } = await supabase.auth.signUp({
+        email: demoEmail,
+        password: demoPassword,
+        options: {
+          data: {
+            full_name: demoName,
+            role: demoRole,
+          },
+        },
+      })
+
+      if (signUpData?.session) {
+        navigate('/dashboard')
+        return
+      }
+
+      // 3. Retry sign in
+      const { data: finalSignIn, error: finalErr } = await supabase.auth.signInWithPassword({
+        email: demoEmail,
+        password: demoPassword,
+      })
+
+      if (!finalErr && finalSignIn.session) {
+        navigate('/dashboard')
+      } else {
+        throw new Error(finalErr?.message || signInError?.message || 'Login failed.')
+      }
     } catch (err: any) {
       console.error('Demo login error:', err)
-      setErrorMsg(err.message || 'Demo login failed. Make sure seed.sql has been executed in Supabase SQL Editor.')
+      setErrorMsg(err.message || 'Demo login failed.')
     } finally {
       setLoading(false)
     }
@@ -114,7 +149,7 @@ export const RegisterPage: React.FC = () => {
             <span>Instant Demo Sign-In (No Signup Needed)</span>
           </div>
           <p className="text-[11px] text-zinc-400">
-            If you hit Supabase registration rate limits, click any pre-created account below to test the platform:
+            Click any pre-created account below to test the platform instantly:
           </p>
 
           <div className="grid grid-cols-2 gap-2 pt-1">
@@ -122,7 +157,7 @@ export const RegisterPage: React.FC = () => {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => handleQuickDemoLogin('customer@smartspace.com')}
+              onClick={() => handleQuickDemoLogin('customer@smartspace.com', 'customer', 'Jordan Lee (Customer)')}
               className="text-xs justify-start border-zinc-700 hover:border-[#E11D2E]"
             >
               👤 Customer
@@ -131,7 +166,7 @@ export const RegisterPage: React.FC = () => {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => handleQuickDemoLogin('owner@smartspace.com')}
+              onClick={() => handleQuickDemoLogin('owner@smartspace.com', 'owner', 'Marcus Sterling (Owner)')}
               className="text-xs justify-start border-zinc-700 hover:border-[#E11D2E]"
             >
               🏢 Space Owner
@@ -140,7 +175,7 @@ export const RegisterPage: React.FC = () => {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => handleQuickDemoLogin('staff@smartspace.com')}
+              onClick={() => handleQuickDemoLogin('staff@smartspace.com', 'staff', 'David Miller (Staff)')}
               className="text-xs justify-start border-zinc-700 hover:border-[#E11D2E]"
             >
               📋 Operations Staff
@@ -149,7 +184,7 @@ export const RegisterPage: React.FC = () => {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => handleQuickDemoLogin('admin@smartspace.com')}
+              onClick={() => handleQuickDemoLogin('admin@smartspace.com', 'admin', 'Alex Vance (Admin)')}
               className="text-xs justify-start border-zinc-700 hover:border-[#E11D2E]"
             >
               👑 Platform Admin

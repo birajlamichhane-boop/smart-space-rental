@@ -37,23 +37,57 @@ export const LoginPage: React.FC = () => {
     }
   }
 
-  const handleQuickDemoLogin = async (demoEmail: string) => {
+  const handleQuickDemoLogin = async (demoEmail: string, demoRole: string, demoName: string) => {
     setEmail(demoEmail)
     setPassword('Password123!')
     setErrorMsg(null)
     setLoading(true)
 
+    const demoPassword = 'Password123!'
+
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      // 1. Try direct sign in
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email: demoEmail,
-        password: 'Password123!',
+        password: demoPassword,
       })
 
-      if (error) throw error
-      navigate(redirectPath)
+      if (!signInError && signInData.session) {
+        navigate(redirectPath)
+        return
+      }
+
+      // 2. If invalid credentials (user not in auth or hash mismatch), auto-create account via GoTrue API
+      const { data: signUpData } = await supabase.auth.signUp({
+        email: demoEmail,
+        password: demoPassword,
+        options: {
+          data: {
+            full_name: demoName,
+            role: demoRole,
+          },
+        },
+      })
+
+      if (signUpData?.session) {
+        navigate(redirectPath)
+        return
+      }
+
+      // 3. Retry sign in once created
+      const { data: finalSignIn, error: finalErr } = await supabase.auth.signInWithPassword({
+        email: demoEmail,
+        password: demoPassword,
+      })
+
+      if (!finalErr && finalSignIn.session) {
+        navigate(redirectPath)
+      } else {
+        throw new Error(finalErr?.message || signInError?.message || 'Login failed.')
+      }
     } catch (err: any) {
       console.error('Demo login error:', err)
-      setErrorMsg(err.message || 'Demo login failed. Make sure seed.sql has been executed in Supabase SQL Editor.')
+      setErrorMsg(err.message || 'Demo login failed.')
     } finally {
       setLoading(false)
     }
@@ -68,10 +102,10 @@ export const LoginPage: React.FC = () => {
         <Card className="p-5 border-[#E11D2E]/40 bg-[#141416]/90 backdrop-blur-md space-y-3">
           <div className="flex items-center gap-2 text-xs font-semibold text-[#E11D2E]">
             <Sparkles className="w-4 h-4" />
-            <span>1-Click Demo Login (Bypasses Rate Limits)</span>
+            <span>1-Click Instant Demo Sign-In</span>
           </div>
           <p className="text-[11px] text-zinc-400">
-            Click any role below to instantly log in with pre-seeded demo accounts:
+            Click any role below to instantly log in to a pre-configured demo account:
           </p>
 
           <div className="grid grid-cols-2 gap-2 pt-1">
@@ -79,7 +113,7 @@ export const LoginPage: React.FC = () => {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => handleQuickDemoLogin('customer@smartspace.com')}
+              onClick={() => handleQuickDemoLogin('customer@smartspace.com', 'customer', 'Jordan Lee (Customer)')}
               className="text-xs justify-start border-zinc-700 hover:border-[#E11D2E]"
             >
               👤 Customer
@@ -88,7 +122,7 @@ export const LoginPage: React.FC = () => {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => handleQuickDemoLogin('owner@smartspace.com')}
+              onClick={() => handleQuickDemoLogin('owner@smartspace.com', 'owner', 'Marcus Sterling (Owner)')}
               className="text-xs justify-start border-zinc-700 hover:border-[#E11D2E]"
             >
               🏢 Space Owner
@@ -97,7 +131,7 @@ export const LoginPage: React.FC = () => {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => handleQuickDemoLogin('staff@smartspace.com')}
+              onClick={() => handleQuickDemoLogin('staff@smartspace.com', 'staff', 'David Miller (Staff)')}
               className="text-xs justify-start border-zinc-700 hover:border-[#E11D2E]"
             >
               📋 Operations Staff
@@ -106,7 +140,7 @@ export const LoginPage: React.FC = () => {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => handleQuickDemoLogin('admin@smartspace.com')}
+              onClick={() => handleQuickDemoLogin('admin@smartspace.com', 'admin', 'Alex Vance (Admin)')}
               className="text-xs justify-start border-zinc-700 hover:border-[#E11D2E]"
             >
               👑 Platform Admin
