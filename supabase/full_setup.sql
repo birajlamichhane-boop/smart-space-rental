@@ -85,20 +85,36 @@ CREATE TABLE IF NOT EXISTS public.wishlist (
 );
 
 -- ========================================================
--- 3. TRIGGERS & FUNCTIONS
+-- 3. BULLETPROOF TRIGGER FUNCTION
 -- ========================================================
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger AS $$
+DECLARE
+  assigned_role text;
 BEGIN
+  IF new.raw_user_meta_data IS NOT NULL THEN
+    assigned_role := COALESCE(new.raw_user_meta_data->>'role', 'customer');
+  ELSE
+    assigned_role := 'customer';
+  END IF;
+
+  IF assigned_role NOT IN ('admin', 'owner', 'staff', 'customer') THEN
+    assigned_role := 'customer';
+  END IF;
+
   INSERT INTO public.profiles (id, role, full_name)
   VALUES (
     new.id,
-    COALESCE(new.raw_user_meta_data->>'role', 'customer'),
-    new.raw_user_meta_data->>'full_name'
+    assigned_role,
+    COALESCE(new.raw_user_meta_data->>'full_name', '')
   )
   ON CONFLICT (id) DO UPDATE SET
     role = EXCLUDED.role,
     full_name = EXCLUDED.full_name;
+
+  RETURN new;
+EXCEPTION WHEN OTHERS THEN
+  -- Prevent trigger errors from failing Auth signups
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -227,7 +243,7 @@ DROP POLICY IF EXISTS "own wishlist" ON public.wishlist;
 CREATE POLICY "own wishlist" ON public.wishlist FOR ALL USING (customer_id = auth.uid());
 
 -- ========================================================
--- 5. SEED AUTH USERS (VALID HEX UUIDs)
+-- 5. SEED AUTH USERS
 -- ========================================================
 INSERT INTO auth.users (
   id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at
@@ -243,7 +259,7 @@ INSERT INTO auth.users (
 ON CONFLICT (id) DO NOTHING;
 
 -- ========================================================
--- 6. DEMO PROPERTIES & DETAILS (VALID HEX UUIDs STARTING WITH 'e')
+-- 6. DEMO PROPERTIES & DETAILS
 -- ========================================================
 INSERT INTO public.properties (id, owner_id, type, title, description, location, base_price, status) VALUES
 ('e1111111-1111-4111-e111-111111111111', 'b1111111-1111-4111-b111-111111111111', 'flat', 'Skyline Luxury Penthouse Loft', 'Ultra-modern 2-bedroom penthouse with panoramic city skyline views, private terrace, high-speed fiber internet, and smart home automation.', 'Downtown Financial District', 250, 'approved'),
