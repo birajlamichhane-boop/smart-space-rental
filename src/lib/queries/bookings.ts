@@ -81,6 +81,16 @@ export async function createBooking(params: {
     return booking
   }
 
+  const { data: property, error: propertyError } = await supabase
+    .from('properties')
+    .select('id')
+    .eq('id', params.property_id)
+    .eq('status', 'approved')
+    .maybeSingle()
+
+  if (propertyError) throw new Error('Unable to verify this property. Please refresh and try again.')
+  if (!property) throw new Error('This property is no longer available for booking.')
+
   const { data, error } = await supabase
     .from('bookings')
     .insert({

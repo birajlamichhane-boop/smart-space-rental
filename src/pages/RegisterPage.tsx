@@ -55,6 +55,8 @@ export const RegisterPage: React.FC = () => {
       }
 
       if (data.session) {
+        localStorage.removeItem('smartspace_demo_session')
+        window.dispatchEvent(new Event('smartspace_auth_change'))
         navigate('/dashboard')
         return
       }
@@ -66,6 +68,8 @@ export const RegisterPage: React.FC = () => {
       })
 
       if (!signInError && signInData.session) {
+        localStorage.removeItem('smartspace_demo_session')
+        window.dispatchEvent(new Event('smartspace_auth_change'))
         navigate('/dashboard')
       } else {
         setErrorMsg('Account created! If email confirmation is enabled in your Supabase project settings, please check your inbox or sign in below.')

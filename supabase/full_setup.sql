@@ -59,6 +59,18 @@ CREATE TABLE IF NOT EXISTS public.bookings (
   ) WHERE (status <> 'cancelled')
 );
 
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conrelid = 'public.bookings'::regclass
+      AND conname = 'bookings_valid_interval'
+  ) THEN
+    ALTER TABLE public.bookings
+      ADD CONSTRAINT bookings_valid_interval CHECK (ends_at > starts_at);
+  END IF;
+END $$;
+
 CREATE TABLE IF NOT EXISTS public.reviews (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   property_id uuid REFERENCES public.properties(id),
@@ -122,6 +134,17 @@ EXCEPTION WHEN OTHERS THEN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+-- Read the caller's role without recursively evaluating the profiles RLS policy.
+CREATE OR REPLACE FUNCTION public.current_user_role()
+RETURNS text
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT role FROM public.profiles WHERE id = auth.uid();
+$$;
+
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
@@ -141,7 +164,7 @@ ALTER TABLE public.wishlist ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "read own profile" ON public.profiles;
 CREATE POLICY "read own profile" ON public.profiles FOR SELECT USING (
-  auth.uid() = id OR EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role = 'admin')
+  auth.uid() = id OR public.current_user_role() = 'admin'
 );
 
 DROP POLICY IF EXISTS "update own profile" ON public.profiles;
@@ -152,7 +175,7 @@ CREATE POLICY "insert profile on auth" ON public.profiles FOR INSERT WITH CHECK 
 
 DROP POLICY IF EXISTS "public reads approved" ON public.properties;
 CREATE POLICY "public reads approved" ON public.properties FOR SELECT USING (
-  status = 'approved' OR owner_id = auth.uid() OR EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role IN ('admin','staff'))
+  status = 'approved' OR owner_id = auth.uid() OR public.current_user_role() IN ('admin','staff')
 );
 
 DROP POLICY IF EXISTS "owner manages own" ON public.properties;
@@ -160,12 +183,12 @@ CREATE POLICY "owner manages own" ON public.properties FOR INSERT WITH CHECK (ow
 
 DROP POLICY IF EXISTS "owner updates own" ON public.properties;
 CREATE POLICY "owner updates own" ON public.properties FOR UPDATE USING (
-  owner_id = auth.uid() OR EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role = 'admin')
+  owner_id = auth.uid() OR public.current_user_role() = 'admin'
 );
 
 DROP POLICY IF EXISTS "owner deletes own" ON public.properties;
 CREATE POLICY "owner deletes own" ON public.properties FOR DELETE USING (
-  owner_id = auth.uid() OR EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role = 'admin')
+  owner_id = auth.uid() OR public.current_user_role() = 'admin'
 );
 
 DROP POLICY IF EXISTS "public reads property images" ON public.property_images;
@@ -174,13 +197,13 @@ CREATE POLICY "public reads property images" ON public.property_images FOR SELEC
 DROP POLICY IF EXISTS "owner manages images" ON public.property_images;
 CREATE POLICY "owner manages images" ON public.property_images FOR INSERT WITH CHECK (
   EXISTS (SELECT 1 FROM public.properties pr WHERE pr.id = property_id AND pr.owner_id = auth.uid()) OR
-  EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role = 'admin')
+  public.current_user_role() = 'admin'
 );
 
 DROP POLICY IF EXISTS "owner deletes images" ON public.property_images;
 CREATE POLICY "owner deletes images" ON public.property_images FOR DELETE USING (
   EXISTS (SELECT 1 FROM public.properties pr WHERE pr.id = property_id AND pr.owner_id = auth.uid()) OR
-  EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role = 'admin')
+  public.current_user_role() = 'admin'
 );
 
 DROP POLICY IF EXISTS "public reads pricing rules" ON public.pricing_rules;
@@ -189,26 +212,26 @@ CREATE POLICY "public reads pricing rules" ON public.pricing_rules FOR SELECT US
 DROP POLICY IF EXISTS "owner manages pricing rules" ON public.pricing_rules;
 CREATE POLICY "owner manages pricing rules" ON public.pricing_rules FOR INSERT WITH CHECK (
   EXISTS (SELECT 1 FROM public.properties pr WHERE pr.id = property_id AND pr.owner_id = auth.uid()) OR
-  EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role = 'admin')
+  public.current_user_role() = 'admin'
 );
 
 DROP POLICY IF EXISTS "owner updates pricing rules" ON public.pricing_rules;
 CREATE POLICY "owner updates pricing rules" ON public.pricing_rules FOR UPDATE USING (
   EXISTS (SELECT 1 FROM public.properties pr WHERE pr.id = property_id AND pr.owner_id = auth.uid()) OR
-  EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role = 'admin')
+  public.current_user_role() = 'admin'
 );
 
 DROP POLICY IF EXISTS "owner deletes pricing rules" ON public.pricing_rules;
 CREATE POLICY "owner deletes pricing rules" ON public.pricing_rules FOR DELETE USING (
   EXISTS (SELECT 1 FROM public.properties pr WHERE pr.id = property_id AND pr.owner_id = auth.uid()) OR
-  EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role = 'admin')
+  public.current_user_role() = 'admin'
 );
 
 DROP POLICY IF EXISTS "customer own bookings" ON public.bookings;
 CREATE POLICY "customer own bookings" ON public.bookings FOR SELECT USING (
   customer_id = auth.uid() OR
   EXISTS (SELECT 1 FROM public.properties pr WHERE pr.id = property_id AND pr.owner_id = auth.uid()) OR
-  EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role IN ('admin','staff'))
+  public.current_user_role() IN ('admin','staff')
 );
 
 DROP POLICY IF EXISTS "customer creates booking" ON public.bookings;
@@ -218,7 +241,7 @@ DROP POLICY IF EXISTS "parties update booking" ON public.bookings;
 CREATE POLICY "parties update booking" ON public.bookings FOR UPDATE USING (
   customer_id = auth.uid() OR
   EXISTS (SELECT 1 FROM public.properties pr WHERE pr.id = property_id AND pr.owner_id = auth.uid()) OR
-  EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role IN ('admin','staff'))
+  public.current_user_role() IN ('admin','staff')
 );
 
 DROP POLICY IF EXISTS "public reads reviews" ON public.reviews;
@@ -234,7 +257,7 @@ CREATE POLICY "invoice visible to involved parties" ON public.invoices FOR SELEC
     WHERE b.id = booking_id AND (
       b.customer_id = auth.uid() OR
       EXISTS (SELECT 1 FROM public.properties pr WHERE pr.id = b.property_id AND pr.owner_id = auth.uid()) OR
-      EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role IN ('admin','staff'))
+      public.current_user_role() IN ('admin','staff')
     )
   )
 );
@@ -248,7 +271,7 @@ CREATE POLICY "invoices insert by booking owner or staff" ON public.invoices FOR
       AND (
         b.customer_id = auth.uid() OR
         EXISTS (SELECT 1 FROM public.properties pr WHERE pr.id = b.property_id AND pr.owner_id = auth.uid()) OR
-        EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role IN ('admin','staff'))
+        public.current_user_role() IN ('admin','staff')
       )
   )
 );
@@ -291,16 +314,16 @@ INSERT INTO public.properties (id, owner_id, type, title, description, location,
 
 ('e2222222-2222-4222-e222-222222222222', 'b1111111-1111-4111-b111-111111111111', 'venue', 'Grand Glasshouse Event Pavilion', 'Stunning glass-encased event venue perfect for corporate galas, private dinners, product launches, and luxury wedding receptions.', 'Phewa Lakeside, Pokhara', 850, 'approved'),
 ('e5555555-5555-4555-e555-555555555555', 'b2222222-2222-4222-b222-222222222222', 'venue', 'The Industrial Brick Warehouse Venue', 'Rustic chic exposed-brick venue spanning 4,000 sq ft with industrial lighting, full sound system, and stage setup.', 'Kupondole, Lalitpur', 600, 'approved'),
-('v2010000-0000-4000-a000-000000000001', 'b1111111-1111-4111-b111-111111111111', 'venue', 'Velvet Lounge & Private Ballroom', 'Opulent velvet-adorned ballroom with crystal chandeliers, private cocktail bar, VIP lounge area, and built-in DJ booth.', 'Durbarmarg, Kathmandu', 950, 'approved'),
-('v2020000-0000-4000-a000-000000000002', 'b2222222-2222-4222-b222-222222222222', 'venue', 'Rooftop Terrace & Sunset Pavilion', 'Open-air highrise rooftop venue with 360-degree skyline view, ambient fire pits, weatherproof cabanas, and catering kitchen prep area.', 'Naxal, Kathmandu', 780, 'approved'),
-('v2030000-0000-4000-a000-000000000003', 'b1111111-1111-4111-b111-111111111111', 'venue', 'Underground Cellar & Acoustic Hall', 'Atmospheric subterranean venue with vaulted brick ceilings, acoustic treatment, warm mood lighting, and private entrance.', 'Lazimpat, Kathmandu', 520, 'approved'),
-('v2040000-0000-4000-a000-000000000004', 'b2222222-2222-4222-b222-222222222222', 'venue', 'Botanical Garden Courtyard Pavilion', 'Lush glass greenhouse venue surrounded by exotic plants and fountains, perfect for pop-up exhibitions, cocktail parties, and photo shoots.', 'Godavari, Lalitpur', 710, 'approved'),
+('92010000-0000-4000-a000-000000000001', 'b1111111-1111-4111-b111-111111111111', 'venue', 'Velvet Lounge & Private Ballroom', 'Opulent velvet-adorned ballroom with crystal chandeliers, private cocktail bar, VIP lounge area, and built-in DJ booth.', 'Durbarmarg, Kathmandu', 950, 'approved'),
+('92020000-0000-4000-a000-000000000002', 'b2222222-2222-4222-b222-222222222222', 'venue', 'Rooftop Terrace & Sunset Pavilion', 'Open-air highrise rooftop venue with 360-degree skyline view, ambient fire pits, weatherproof cabanas, and catering kitchen prep area.', 'Naxal, Kathmandu', 780, 'approved'),
+('92030000-0000-4000-a000-000000000003', 'b1111111-1111-4111-b111-111111111111', 'venue', 'Underground Cellar & Acoustic Hall', 'Atmospheric subterranean venue with vaulted brick ceilings, acoustic treatment, warm mood lighting, and private entrance.', 'Lazimpat, Kathmandu', 520, 'approved'),
+('92040000-0000-4000-a000-000000000004', 'b2222222-2222-4222-b222-222222222222', 'venue', 'Botanical Garden Courtyard Pavilion', 'Lush glass greenhouse venue surrounded by exotic plants and fountains, perfect for pop-up exhibitions, cocktail parties, and photo shoots.', 'Godavari, Lalitpur', 710, 'approved'),
 
 ('e3333333-3333-4333-e333-333333333333', 'b1111111-1111-4111-b111-111111111111', 'studio', 'Neon Light Photography & Creator Studio', 'Fully equipped creative studio with cyclorama wall, professional RGB lighting grid, podcasting suite, and private green room.', 'Jhamsikhel, Lalitpur', 180, 'approved'),
-('s3010000-0000-4000-a000-000000000001', 'b2222222-2222-4222-b222-222222222222', 'studio', 'Pop-Up Boutique Retail Gallery', 'Street-level retail showroom with high foot-traffic storefront windows, modular display racks, POS checkout counter, and fitting rooms.', 'New Road, Kathmandu', 240, 'approved'),
-('s3020000-0000-4000-a000-000000000002', 'b1111111-1111-4111-b111-111111111111', 'studio', 'Acoustic Podcasting & Broadcast Studio', 'Sound-isolated podcast suite with Shure SM7B microphones, Rodecaster Pro II console, 4K camera multi-cam setup, and live streaming gear.', 'Kamaladi, Kathmandu', 160, 'approved'),
-('s3030000-0000-4000-a000-000000000003', 'b2222222-2222-4222-b222-222222222222', 'studio', 'Artisan Craft & Design Atelier', 'Sun-drenched studio space with drafting tables, ceramics wheel, heavy-duty workbenches, utility sinks, and gallery lighting grid.', 'Patan, Lalitpur', 210, 'approved'),
-('s3040000-0000-4000-a000-000000000004', 'b1111111-1111-4111-b111-111111111111', 'studio', 'High-Fashion Runway & Fitting Studio', 'Sleek fashion studio with 50ft catwalk runway, full-length mirror wall, steamer equipment, makeup stations, and private changing rooms.', 'Putalisadak, Kathmandu', 290, 'approved')
+('83010000-0000-4000-a000-000000000001', 'b2222222-2222-4222-b222-222222222222', 'studio', 'Pop-Up Boutique Retail Gallery', 'Street-level retail showroom with high foot-traffic storefront windows, modular display racks, POS checkout counter, and fitting rooms.', 'New Road, Kathmandu', 240, 'approved'),
+('83020000-0000-4000-a000-000000000002', 'b1111111-1111-4111-b111-111111111111', 'studio', 'Acoustic Podcasting & Broadcast Studio', 'Sound-isolated podcast suite with Shure SM7B microphones, Rodecaster Pro II console, 4K camera multi-cam setup, and live streaming gear.', 'Kamaladi, Kathmandu', 160, 'approved'),
+('83030000-0000-4000-a000-000000000003', 'b2222222-2222-4222-b222-222222222222', 'studio', 'Artisan Craft & Design Atelier', 'Sun-drenched studio space with drafting tables, ceramics wheel, heavy-duty workbenches, utility sinks, and gallery lighting grid.', 'Patan, Lalitpur', 210, 'approved'),
+('83040000-0000-4000-a000-000000000004', 'b1111111-1111-4111-b111-111111111111', 'studio', 'High-Fashion Runway & Fitting Studio', 'Sleek fashion studio with 50ft catwalk runway, full-length mirror wall, steamer equipment, makeup stations, and private changing rooms.', 'Putalisadak, Kathmandu', 290, 'approved')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.property_images (id, property_id, storage_path) VALUES
@@ -318,13 +341,13 @@ INSERT INTO public.property_images (id, property_id, storage_path) VALUES
 (gen_random_uuid(), 'f1100000-0000-4000-a000-000000000010', 'https://images.unsplash.com/photo-1567496898669-ee935f5f647a?auto=format&fit=crop&w=1200&q=80'),
 (gen_random_uuid(), 'e2222222-2222-4222-e222-222222222222', 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1200&q=80'),
 (gen_random_uuid(), 'e5555555-5555-4555-e555-555555555555', 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1200&q=80'),
-(gen_random_uuid(), 'v2010000-0000-4000-a000-000000000001', 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80'),
-(gen_random_uuid(), 'v2020000-0000-4000-a000-000000000002', 'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=80'),
-(gen_random_uuid(), 'v2030000-0000-4000-a000-000000000003', 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1200&q=80'),
-(gen_random_uuid(), 'v2040000-0000-4000-a000-000000000004', 'https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), '92010000-0000-4000-a000-000000000001', 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), '92020000-0000-4000-a000-000000000002', 'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), '92030000-0000-4000-a000-000000000003', 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), '92040000-0000-4000-a000-000000000004', 'https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=1200&q=80'),
 (gen_random_uuid(), 'e3333333-3333-4333-e333-333333333333', 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80'),
-(gen_random_uuid(), 's3010000-0000-4000-a000-000000000001', 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80'),
-(gen_random_uuid(), 's3020000-0000-4000-a000-000000000002', 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=1200&q=80'),
-(gen_random_uuid(), 's3030000-0000-4000-a000-000000000003', 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1200&q=80'),
-(gen_random_uuid(), 's3040000-0000-4000-a000-000000000004', 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=80')
+(gen_random_uuid(), '83010000-0000-4000-a000-000000000001', 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), '83020000-0000-4000-a000-000000000002', 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), '83030000-0000-4000-a000-000000000003', 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1200&q=80'),
+(gen_random_uuid(), '83040000-0000-4000-a000-000000000004', 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=80')
 ON CONFLICT (id) DO NOTHING;

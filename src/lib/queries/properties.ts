@@ -244,7 +244,7 @@ export const DEMO_PROPERTIES: Property[] = [
     ],
   },
   {
-    id: 'v2010000-0000-4000-a000-000000000001',
+    id: '92010000-0000-4000-a000-000000000001',
     owner_id: 'b1111111-1111-4111-b111-111111111111',
     type: 'venue',
     title: 'Velvet Lounge & Private Ballroom',
@@ -253,15 +253,15 @@ export const DEMO_PROPERTIES: Property[] = [
     base_price: 950,
     status: 'approved',
     created_at: new Date().toISOString(),
-    images: [{ id: 'img-v1', property_id: 'v2010000-0000-4000-a000-000000000001', storage_path: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80' }],
+    images: [{ id: 'img-v1', property_id: '92010000-0000-4000-a000-000000000001', storage_path: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80' }],
     pricing_rules: [
-      { id: 'pr-v1a', property_id: 'v2010000-0000-4000-a000-000000000001', rate_type: 'hourly', amount: 140 },
-      { id: 'pr-v1b', property_id: 'v2010000-0000-4000-a000-000000000001', rate_type: 'daily', amount: 950 },
-      { id: 'pr-v1c', property_id: 'v2010000-0000-4000-a000-000000000001', rate_type: 'monthly', amount: 21000 },
+      { id: 'pr-v1a', property_id: '92010000-0000-4000-a000-000000000001', rate_type: 'hourly', amount: 140 },
+      { id: 'pr-v1b', property_id: '92010000-0000-4000-a000-000000000001', rate_type: 'daily', amount: 950 },
+      { id: 'pr-v1c', property_id: '92010000-0000-4000-a000-000000000001', rate_type: 'monthly', amount: 21000 },
     ],
   },
   {
-    id: 'v2020000-0000-4000-a000-000000000002',
+    id: '92020000-0000-4000-a000-000000000002',
     owner_id: 'b2222222-2222-4222-b222-222222222222',
     type: 'venue',
     title: 'Rooftop Terrace & Sunset Pavilion',
@@ -270,15 +270,15 @@ export const DEMO_PROPERTIES: Property[] = [
     base_price: 780,
     status: 'approved',
     created_at: new Date().toISOString(),
-    images: [{ id: 'img-v2', property_id: 'v2020000-0000-4000-a000-000000000002', storage_path: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=80' }],
+    images: [{ id: 'img-v2', property_id: '92020000-0000-4000-a000-000000000002', storage_path: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=80' }],
     pricing_rules: [
-      { id: 'pr-v2a', property_id: 'v2020000-0000-4000-a000-000000000002', rate_type: 'hourly', amount: 110 },
-      { id: 'pr-v2b', property_id: 'v2020000-0000-4000-a000-000000000002', rate_type: 'daily', amount: 780 },
-      { id: 'pr-v2c', property_id: 'v2020000-0000-4000-a000-000000000002', rate_type: 'monthly', amount: 16500 },
+      { id: 'pr-v2a', property_id: '92020000-0000-4000-a000-000000000002', rate_type: 'hourly', amount: 110 },
+      { id: 'pr-v2b', property_id: '92020000-0000-4000-a000-000000000002', rate_type: 'daily', amount: 780 },
+      { id: 'pr-v2c', property_id: '92020000-0000-4000-a000-000000000002', rate_type: 'monthly', amount: 16500 },
     ],
   },
   {
-    id: 'v2030000-0000-4000-a000-000000000003',
+    id: '92030000-0000-4000-a000-000000000003',
     owner_id: 'b1111111-1111-4111-b111-111111111111',
     type: 'venue',
     title: 'Underground Cellar & Acoustic Hall',
@@ -287,15 +287,15 @@ export const DEMO_PROPERTIES: Property[] = [
     base_price: 520,
     status: 'approved',
     created_at: new Date().toISOString(),
-    images: [{ id: 'img-v3', property_id: 'v2030000-0000-4000-a000-000000000003', storage_path: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1200&q=80' }],
+    images: [{ id: 'img-v3', property_id: '92030000-0000-4000-a000-000000000003', storage_path: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1200&q=80' }],
     pricing_rules: [
-      { id: 'pr-v3a', property_id: 'v2030000-0000-4000-a000-000000000003', rate_type: 'hourly', amount: 80 },
-      { id: 'pr-v3b', property_id: 'v2030000-0000-4000-a000-000000000003', rate_type: 'daily', amount: 520 },
-      { id: 'pr-v3c', property_id: 'v2030000-0000-4000-a000-000000000003', rate_type: 'monthly', amount: 11500 },
+      { id: 'pr-v3a', property_id: '92030000-0000-4000-a000-000000000003', rate_type: 'hourly', amount: 80 },
+      { id: 'pr-v3b', property_id: '92030000-0000-4000-a000-000000000003', rate_type: 'daily', amount: 520 },
+      { id: 'pr-v3c', property_id: '92030000-0000-4000-a000-000000000003', rate_type: 'monthly', amount: 11500 },
     ],
   },
   {
-    id: 'v2040000-0000-4000-a000-000000000004',
+    id: '92040000-0000-4000-a000-000000000004',
     owner_id: 'b2222222-2222-4222-b222-222222222222',
     type: 'venue',
     title: 'Botanical Garden Courtyard Pavilion',
@@ -304,11 +304,11 @@ export const DEMO_PROPERTIES: Property[] = [
     base_price: 710,
     status: 'approved',
     created_at: new Date().toISOString(),
-    images: [{ id: 'img-v4', property_id: 'v2040000-0000-4000-a000-000000000004', storage_path: 'https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=1200&q=80' }],
+    images: [{ id: 'img-v4', property_id: '92040000-0000-4000-a000-000000000004', storage_path: 'https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=1200&q=80' }],
     pricing_rules: [
-      { id: 'pr-v4a', property_id: 'v2040000-0000-4000-a000-000000000004', rate_type: 'hourly', amount: 100 },
-      { id: 'pr-v4b', property_id: 'v2040000-0000-4000-a000-000000000004', rate_type: 'daily', amount: 710 },
-      { id: 'pr-v4c', property_id: 'v2040000-0000-4000-a000-000000000004', rate_type: 'monthly', amount: 15000 },
+      { id: 'pr-v4a', property_id: '92040000-0000-4000-a000-000000000004', rate_type: 'hourly', amount: 100 },
+      { id: 'pr-v4b', property_id: '92040000-0000-4000-a000-000000000004', rate_type: 'daily', amount: 710 },
+      { id: 'pr-v4c', property_id: '92040000-0000-4000-a000-000000000004', rate_type: 'monthly', amount: 15000 },
     ],
   },
 
@@ -331,7 +331,7 @@ export const DEMO_PROPERTIES: Property[] = [
     ],
   },
   {
-    id: 's3010000-0000-4000-a000-000000000001',
+    id: '83010000-0000-4000-a000-000000000001',
     owner_id: 'b2222222-2222-4222-b222-222222222222',
     type: 'studio',
     title: 'Pop-Up Boutique Retail Gallery',
@@ -340,15 +340,15 @@ export const DEMO_PROPERTIES: Property[] = [
     base_price: 240,
     status: 'approved',
     created_at: new Date().toISOString(),
-    images: [{ id: 'img-s1', property_id: 's3010000-0000-4000-a000-000000000001', storage_path: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80' }],
+    images: [{ id: 'img-s1', property_id: '83010000-0000-4000-a000-000000000001', storage_path: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80' }],
     pricing_rules: [
-      { id: 'pr-s1a', property_id: 's3010000-0000-4000-a000-000000000001', rate_type: 'hourly', amount: 35 },
-      { id: 'pr-s1b', property_id: 's3010000-0000-4000-a000-000000000001', rate_type: 'daily', amount: 240 },
-      { id: 'pr-s1c', property_id: 's3010000-0000-4000-a000-000000000001', rate_type: 'monthly', amount: 5200 },
+      { id: 'pr-s1a', property_id: '83010000-0000-4000-a000-000000000001', rate_type: 'hourly', amount: 35 },
+      { id: 'pr-s1b', property_id: '83010000-0000-4000-a000-000000000001', rate_type: 'daily', amount: 240 },
+      { id: 'pr-s1c', property_id: '83010000-0000-4000-a000-000000000001', rate_type: 'monthly', amount: 5200 },
     ],
   },
   {
-    id: 's3020000-0000-4000-a000-000000000002',
+    id: '83020000-0000-4000-a000-000000000002',
     owner_id: 'b1111111-1111-4111-b111-111111111111',
     type: 'studio',
     title: 'Acoustic Podcasting & Broadcast Studio',
@@ -357,15 +357,15 @@ export const DEMO_PROPERTIES: Property[] = [
     base_price: 160,
     status: 'approved',
     created_at: new Date().toISOString(),
-    images: [{ id: 'img-s2', property_id: 's3020000-0000-4000-a000-000000000002', storage_path: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=1200&q=80' }],
+    images: [{ id: 'img-s2', property_id: '83020000-0000-4000-a000-000000000002', storage_path: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=1200&q=80' }],
     pricing_rules: [
-      { id: 'pr-s2a', property_id: 's3020000-0000-4000-a000-000000000002', rate_type: 'hourly', amount: 22 },
-      { id: 'pr-s2b', property_id: 's3020000-0000-4000-a000-000000000002', rate_type: 'daily', amount: 160 },
-      { id: 'pr-s2c', property_id: 's3020000-0000-4000-a000-000000000002', rate_type: 'monthly', amount: 3600 },
+      { id: 'pr-s2a', property_id: '83020000-0000-4000-a000-000000000002', rate_type: 'hourly', amount: 22 },
+      { id: 'pr-s2b', property_id: '83020000-0000-4000-a000-000000000002', rate_type: 'daily', amount: 160 },
+      { id: 'pr-s2c', property_id: '83020000-0000-4000-a000-000000000002', rate_type: 'monthly', amount: 3600 },
     ],
   },
   {
-    id: 's3030000-0000-4000-a000-000000000003',
+    id: '83030000-0000-4000-a000-000000000003',
     owner_id: 'b2222222-2222-4222-b222-222222222222',
     type: 'studio',
     title: 'Artisan Craft & Design Atelier',
@@ -374,15 +374,15 @@ export const DEMO_PROPERTIES: Property[] = [
     base_price: 210,
     status: 'approved',
     created_at: new Date().toISOString(),
-    images: [{ id: 'img-s3', property_id: 's3030000-0000-4000-a000-000000000003', storage_path: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1200&q=80' }],
+    images: [{ id: 'img-s3', property_id: '83030000-0000-4000-a000-000000000003', storage_path: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1200&q=80' }],
     pricing_rules: [
-      { id: 'pr-s3a', property_id: 's3030000-0000-4000-a000-000000000003', rate_type: 'hourly', amount: 30 },
-      { id: 'pr-s3b', property_id: 's3030000-0000-4000-a000-000000000003', rate_type: 'daily', amount: 210 },
-      { id: 'pr-s3c', property_id: 's3030000-0000-4000-a000-000000000003', rate_type: 'monthly', amount: 4500 },
+      { id: 'pr-s3a', property_id: '83030000-0000-4000-a000-000000000003', rate_type: 'hourly', amount: 30 },
+      { id: 'pr-s3b', property_id: '83030000-0000-4000-a000-000000000003', rate_type: 'daily', amount: 210 },
+      { id: 'pr-s3c', property_id: '83030000-0000-4000-a000-000000000003', rate_type: 'monthly', amount: 4500 },
     ],
   },
   {
-    id: 's3040000-0000-4000-a000-000000000004',
+    id: '83040000-0000-4000-a000-000000000004',
     owner_id: 'b1111111-1111-4111-b111-111111111111',
     type: 'studio',
     title: 'High-Fashion Runway & Fitting Studio',
@@ -391,11 +391,11 @@ export const DEMO_PROPERTIES: Property[] = [
     base_price: 290,
     status: 'approved',
     created_at: new Date().toISOString(),
-    images: [{ id: 'img-s4', property_id: 's3040000-0000-4000-a000-000000000004', storage_path: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=80' }],
+    images: [{ id: 'img-s4', property_id: '83040000-0000-4000-a000-000000000004', storage_path: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=80' }],
     pricing_rules: [
-      { id: 'pr-s4a', property_id: 's3040000-0000-4000-a000-000000000004', rate_type: 'hourly', amount: 40 },
-      { id: 'pr-s4b', property_id: 's3040000-0000-4000-a000-000000000004', rate_type: 'daily', amount: 290 },
-      { id: 'pr-s4c', property_id: 's3040000-0000-4000-a000-000000000004', rate_type: 'monthly', amount: 6000 },
+      { id: 'pr-s4a', property_id: '83040000-0000-4000-a000-000000000004', rate_type: 'hourly', amount: 40 },
+      { id: 'pr-s4b', property_id: '83040000-0000-4000-a000-000000000004', rate_type: 'daily', amount: 290 },
+      { id: 'pr-s4c', property_id: '83040000-0000-4000-a000-000000000004', rate_type: 'monthly', amount: 6000 },
     ],
   },
 ]
@@ -463,7 +463,8 @@ export async function getApprovedProperties(filters?: { type?: PropertyType | 'a
 
 export async function getPropertyById(id: string): Promise<Property | null> {
   if (typeof window !== 'undefined' && localStorage.getItem('smartspace_demo_session')) {
-    return DEMO_PROPERTIES.find(p => p.id === id) || DEMO_PROPERTIES[0]
+    const demoProperty = DEMO_PROPERTIES.find(p => p.id === id)
+    if (demoProperty) return demoProperty
   }
 
   try {
@@ -484,7 +485,7 @@ export async function getPropertyById(id: string): Promise<Property | null> {
     console.warn('Using fallback property detail:', err)
   }
 
-  return DEMO_PROPERTIES.find(p => p.id === id) || DEMO_PROPERTIES[0]
+  return null
 }
 
 export async function getOwnerProperties(ownerId: string): Promise<Property[]> {

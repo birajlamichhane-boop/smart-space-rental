@@ -23,7 +23,6 @@ export const PropertyGallery: React.FC<PropertyGalleryProps> = ({ images, title 
           alt={title}
           className="w-full h-full object-cover transition-opacity duration-300"
           loading="eager"
-          fetchPriority="high"
           decoding="async"
         />
       </div>

@@ -5,7 +5,7 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
 
 const fetchWithTimeout: typeof fetch = (input, init) => {
   const controller = new AbortController()
-  const timeoutId = window.setTimeout(() => controller.abort(), 1500)
+  const timeoutId = window.setTimeout(() => controller.abort(), 10000)
 
   if (init?.signal) {
     if (init.signal.aborted) controller.abort()

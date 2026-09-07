@@ -29,6 +29,8 @@ export const LoginPage: React.FC = () => {
       })
 
       if (error) throw error
+      localStorage.removeItem('smartspace_demo_session')
+      window.dispatchEvent(new Event('smartspace_auth_change'))
       navigate(redirectPath)
     } catch (err: any) {
       console.error('Login error:', err)
