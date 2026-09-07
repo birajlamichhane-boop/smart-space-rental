@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { PropertyCard } from '../components/property/PropertyCard'
 import { PropertyFilters } from '../components/property/PropertyFilters'
-import { getApprovedProperties, DEMO_PROPERTIES } from '../lib/queries/properties'
+import { getApprovedProperties } from '../lib/queries/properties'
 import { Property, PropertyType } from '../types/database'
 import { useAuth } from '../hooks/useAuth'
 import { getCustomerWishlist, addToWishlist, removeFromWishlist } from '../lib/queries/wishlist'
@@ -15,7 +15,7 @@ export const PropertiesPage: React.FC = () => {
   const initialType = searchParams.get('type') as PropertyType | null
 
   const { user } = useAuth()
-  const [properties, setProperties] = useState<Property[]>(DEMO_PROPERTIES)
+  const [properties, setProperties] = useState<Property[]>([])
   const [wishlistIds, setWishlistIds] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
 

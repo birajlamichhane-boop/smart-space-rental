@@ -4,14 +4,14 @@ import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
 import { Card } from '../components/ui/card'
 import { PropertyCard } from '../components/property/PropertyCard'
-import { getApprovedProperties, DEMO_PROPERTIES } from '../lib/queries/properties'
+import { getApprovedProperties } from '../lib/queries/properties'
 import { Property } from '../types/database'
 import { Search, Building2, ShieldCheck, Sparkles, ArrowRight, Clock, MapPin, CheckCircle2, ArrowUpRight, CreditCard, LockKeyhole } from 'lucide-react'
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
-  const [featuredProperties, setFeaturedProperties] = useState<Property[]>(DEMO_PROPERTIES.slice(0, 3))
+  const [featuredProperties, setFeaturedProperties] = useState<Property[]>([])
 
   useEffect(() => {
     getApprovedProperties()

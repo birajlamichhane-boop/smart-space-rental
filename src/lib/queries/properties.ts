@@ -432,18 +432,22 @@ export async function getApprovedProperties(filters?: { type?: PropertyType | 'a
     const { data, error } = await Promise.race([
       query.order('created_at', { ascending: false }),
       new Promise<never>((_, reject) => {
-        window.setTimeout(() => reject(new Error('Property request timed out')), 1200)
+        window.setTimeout(() => reject(new Error('Property request timed out')), 10000)
       }),
     ])
 
-    if (!error && data && data.length > 0) {
+    if (!error && data) {
       return data as Property[]
     }
   } catch (err) {
     console.warn('Supabase query error, returning rich demo properties list:', err)
   }
 
-  // Client-side filtering on DEMO_PROPERTIES fallback
+  if (typeof window === 'undefined' || !localStorage.getItem('smartspace_demo_session')) {
+    return []
+  }
+
+  // Client-side filtering for the explicit local demo session.
   let list = DEMO_PROPERTIES
   if (filters?.type && filters.type !== 'all') {
     list = list.filter(p => p.type === filters.type)
