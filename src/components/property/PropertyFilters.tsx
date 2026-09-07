@@ -74,7 +74,7 @@ export const PropertyFilters: React.FC<PropertyFiltersProps> = ({
 
       {/* Price Range */}
       <div>
-        <label className="block text-xs font-medium text-zinc-400 mb-1.5">Price Range ($/day)</label>
+        <label className="block text-xs font-medium text-zinc-400 mb-1.5">Price Range (रू/day)</label>
         <div className="grid grid-cols-2 gap-2">
           <Input
             type="number"

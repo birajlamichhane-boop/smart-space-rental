@@ -26,7 +26,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       <div className="rounded-lg border border-[#E11D2E]/30 bg-[#1C1C1F] p-3 shadow-xl text-xs">
         <p className="text-zinc-400 font-medium">{label}</p>
         <p className="text-[#E11D2E] font-bold text-sm mt-0.5">
-          ${payload[0].value.toLocaleString()}
+          रू {payload[0].value.toLocaleString('en-NP')}
         </p>
       </div>
     )

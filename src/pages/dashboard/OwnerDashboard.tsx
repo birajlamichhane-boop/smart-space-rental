@@ -81,7 +81,7 @@ export const OwnerDashboard: React.FC = () => {
         <StatCard
           title="Total Earnings"
           value={monthlyRevenue}
-          prefix="$"
+          prefix="रू "
           icon={DollarSign}
         />
       </div>
@@ -109,7 +109,7 @@ export const OwnerDashboard: React.FC = () => {
                     <p className="text-[11px] text-zinc-400">Renter: {b.customer?.full_name || 'Customer'}</p>
                   </div>
                   <div className="text-right">
-                    <span className="text-xs font-bold text-white block">${b.total_price}</span>
+                    <span className="text-xs font-bold text-white block">रू {b.total_price?.toLocaleString('en-NP')}</span>
                     <Badge variant={b.status} className="mt-1">{b.status}</Badge>
                   </div>
                 </div>

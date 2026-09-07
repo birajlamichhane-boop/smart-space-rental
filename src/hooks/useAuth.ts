@@ -40,19 +40,33 @@ export function useAuth() {
     }
 
     // Fetch initial Supabase session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!mounted) return
-      setSession(session)
-      setUser(session?.user ?? null)
-      if (session?.user) {
-        getCurrentProfile(session.user.id).then((p) => {
-          if (mounted) setProfile(p)
-          if (mounted) setLoading(false)
-        })
-      } else {
+    supabase.auth.getSession()
+      .then(({ data: { session } }) => {
+        if (!mounted) return
+        setSession(session)
+        setUser(session?.user ?? null)
+        if (session?.user) {
+          getCurrentProfile(session.user.id)
+            .then((p) => {
+              if (mounted) setProfile(p)
+            })
+            .catch(() => {
+              if (mounted) setProfile(null)
+            })
+            .finally(() => {
+              if (mounted) setLoading(false)
+            })
+        } else {
+          setLoading(false)
+        }
+      })
+      .catch(() => {
+        if (!mounted) return
+        setSession(null)
+        setUser(null)
+        setProfile(null)
         setLoading(false)
-      }
-    })
+      })
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {

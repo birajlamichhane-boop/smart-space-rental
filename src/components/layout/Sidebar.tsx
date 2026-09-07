@@ -15,7 +15,7 @@ export const Sidebar: React.FC = () => {
   const { role, isAdmin, isOwner, isStaff, isCustomer } = useRole()
 
   const navItems = [
-    { label: 'Overview', to: '/dashboard', icon: LayoutDashboard },
+    ...(!isStaff ? [{ label: 'Overview', to: '/dashboard', icon: LayoutDashboard }] : []),
     ...(isCustomer
       ? [
           { label: 'My Bookings', to: '/bookings', icon: CalendarCheck },
@@ -47,9 +47,9 @@ export const Sidebar: React.FC = () => {
           {role} Navigation
         </div>
         <nav className="space-y-1">
-          {navItems.map((item) => (
+            {navItems.map((item) => (
             <NavLink
-              key={item.to}
+              key={`${item.to}-${item.label}`}
               to={item.to}
               end={item.to === '/dashboard'}
               className={({ isActive }) =>

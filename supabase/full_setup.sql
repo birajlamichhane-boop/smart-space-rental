@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS public.bookings (
   status text NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','confirmed','cancelled')),
   total_price numeric,
   created_at timestamptz DEFAULT now(),
+  CHECK (ends_at > starts_at),
   EXCLUDE USING gist (
     property_id WITH =,
     tstzrange(starts_at, ends_at) WITH &&
@@ -76,6 +77,9 @@ CREATE TABLE IF NOT EXISTS public.invoices (
   amount numeric NOT NULL,
   generated_at timestamptz DEFAULT now()
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS invoices_booking_id_unique
+  ON public.invoices (booking_id);
 
 CREATE TABLE IF NOT EXISTS public.wishlist (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -230,13 +234,24 @@ CREATE POLICY "invoice visible to involved parties" ON public.invoices FOR SELEC
     WHERE b.id = booking_id AND (
       b.customer_id = auth.uid() OR
       EXISTS (SELECT 1 FROM public.properties pr WHERE pr.id = b.property_id AND pr.owner_id = auth.uid()) OR
-      EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = b.property_id AND p.role IN ('admin','staff'))
+      EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role IN ('admin','staff'))
     )
   )
 );
 
 DROP POLICY IF EXISTS "invoices insert by booking owner or staff" ON public.invoices;
-CREATE POLICY "invoices insert by booking owner or staff" ON public.invoices FOR INSERT WITH CHECK (true);
+CREATE POLICY "invoices insert by booking owner or staff" ON public.invoices FOR INSERT WITH CHECK (
+  amount >= 0 AND EXISTS (
+    SELECT 1 FROM public.bookings b
+    WHERE b.id = booking_id
+      AND amount = b.total_price
+      AND (
+        b.customer_id = auth.uid() OR
+        EXISTS (SELECT 1 FROM public.properties pr WHERE pr.id = b.property_id AND pr.owner_id = auth.uid()) OR
+        EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role IN ('admin','staff'))
+      )
+  )
+);
 
 DROP POLICY IF EXISTS "own wishlist" ON public.wishlist;
 CREATE POLICY "own wishlist" ON public.wishlist FOR ALL USING (customer_id = auth.uid());
@@ -247,45 +262,45 @@ CREATE POLICY "own wishlist" ON public.wishlist FOR ALL USING (customer_id = aut
 INSERT INTO auth.users (
   id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at
 ) VALUES
-('a1111111-1111-4111-a111-111111111111', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'admin@smartspace.com', crypt('Password123!', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Alex Vance (Admin)","role":"admin"}', now(), now()),
-('a2222222-2222-4222-a222-222222222222', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'admin2@smartspace.com', crypt('Password123!', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Sarah Jenkins (Admin)","role":"admin"}', now(), now()),
-('b1111111-1111-4111-b111-111111111111', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'owner@smartspace.com', crypt('Password123!', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Marcus Sterling (Owner)","role":"owner"}', now(), now()),
-('b2222222-2222-4222-b222-222222222222', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'owner2@smartspace.com', crypt('Password123!', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Elena Rostova (Owner)","role":"owner"}', now(), now()),
-('c1111111-1111-4111-c111-111111111111', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'staff@smartspace.com', crypt('Password123!', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"David Miller (Staff)","role":"staff"}', now(), now()),
-('c2222222-2222-4222-c222-222222222222', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'staff2@smartspace.com', crypt('Password123!', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Rachel Green (Staff)","role":"staff"}', now(), now()),
-('d1111111-1111-4111-d111-111111111111', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'customer@smartspace.com', crypt('Password123!', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Jordan Lee (Customer)","role":"customer"}', now(), now()),
-('d2222222-2222-4222-d222-222222222222', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'customer2@smartspace.com', crypt('Password123!', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Claire Bennett (Customer)","role":"customer"}', now(), now())
+('a1111111-1111-4111-a111-111111111111', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'admin@smartspace.com', crypt('Password123!', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Pragya Shrestha (Admin)","role":"admin"}', now(), now()),
+('a2222222-2222-4222-a222-222222222222', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'admin2@smartspace.com', crypt('Password123!', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Ramesh Karki (Admin)","role":"admin"}', now(), now()),
+('b1111111-1111-4111-b111-111111111111', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'owner@smartspace.com', crypt('Password123!', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Aayush Thapa (Owner)","role":"owner"}', now(), now()),
+('b2222222-2222-4222-b222-222222222222', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'owner2@smartspace.com', crypt('Password123!', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Anisha Gurung (Owner)","role":"owner"}', now(), now()),
+('c1111111-1111-4111-c111-111111111111', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'staff@smartspace.com', crypt('Password123!', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Nabin Gurung (Staff)","role":"staff"}', now(), now()),
+('c2222222-2222-4222-c222-222222222222', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'staff2@smartspace.com', crypt('Password123!', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Manisha Rai (Staff)","role":"staff"}', now(), now()),
+('d1111111-1111-4111-d111-111111111111', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'customer@smartspace.com', crypt('Password123!', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Sita Sharma (Customer)","role":"customer"}', now(), now()),
+('d2222222-2222-4222-d222-222222222222', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'customer2@smartspace.com', crypt('Password123!', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Bikash Adhikari (Customer)","role":"customer"}', now(), now())
 ON CONFLICT (id) DO NOTHING;
 
 -- ========================================================
 -- 6. 23 DEMO PROPERTIES (12 FLATS, 6 VENUES, 5 STUDIOS)
 -- ========================================================
 INSERT INTO public.properties (id, owner_id, type, title, description, location, base_price, status) VALUES
-('e1111111-1111-4111-e111-111111111111', 'b1111111-1111-4111-b111-111111111111', 'flat', 'Skyline Luxury Penthouse Loft', 'Ultra-modern 2-bedroom penthouse with panoramic city skyline views, private terrace, high-speed fiber internet, and smart home automation.', 'Downtown Financial District', 250, 'approved'),
-('e4444444-4444-4444-e444-444444444444', 'b2222222-2222-4222-b222-222222222222', 'flat', 'Minimalist Waterfront Studio Apartment', 'Sleek, minimalist residential flat with floor-to-ceiling windows, rain shower, fully stocked chef kitchen, and private parking space.', 'Marina Bay District', 190, 'approved'),
-('f1010000-0000-4000-a000-000000000001', 'b1111111-1111-4111-b111-111111111111', 'flat', 'Highline Modern Duplex Flat', 'Spacious two-story duplex flat with architectural floating stairs, double-height ceiling, private balcony, and 24/7 concierge.', 'Hudson Yards West', 310, 'approved'),
-('f1020000-0000-4000-a000-000000000002', 'b2222222-2222-4222-b222-222222222222', 'flat', 'Boho-Chic Midtown Garden Residence', 'Cozy garden-level residence with private brick patio, lush indoor plants, oak hardwood floors, and ambient warm fireplace.', 'Midtown West', 175, 'approved'),
-('f1030000-0000-4000-a000-000000000003', 'b1111111-1111-4111-b111-111111111111', 'flat', 'Urban Industrial Loft & Terrace', 'Authentic converted factory loft featuring steel beams, polished concrete floors, custom acoustic insulation, and skyline rooftop access.', 'Tribeca Arts District', 220, 'approved'),
-('f1040000-0000-4000-a000-000000000004', 'b2222222-2222-4222-b222-222222222222', 'flat', 'Scandinavian Eco Smart Flat', 'Energy-efficient 1-bedroom flat built with sustainable pine, smart climate control, workstation nook, and sunlit bay windows.', 'Greenpoint East', 160, 'approved'),
-('f1050000-0000-4000-a000-000000000005', 'b1111111-1111-4111-b111-111111111111', 'flat', 'Metropolitan Parkview Apartment', 'Elegant corner flat directly overlooking city park grounds. Features marble bathroom, sub-zero appliances, and designer furnishings.', 'Central Park South', 280, 'approved'),
-('f1060000-0000-4000-a000-000000000006', 'b2222222-2222-4222-b222-222222222222', 'flat', 'Sunset Terrace Executive Suite', 'Premium executive suite featuring expansive outdoor dining lounge, private Jacuzzi, wine cooler, and keyless smart entry.', 'Financial Plaza', 340, 'approved'),
-('f1070000-0000-4000-a000-000000000007', 'b1111111-1111-4111-b111-111111111111', 'flat', 'The Glass Horizon Micro Suite', 'Ultra-functional compact smart flat designed for remote professionals, featuring ergonomic sit-stand desk and gigabit Wi-Fi.', 'Tech Corridor North', 145, 'approved'),
-('f1080000-0000-4000-a000-000000000008', 'b2222222-2222-4222-b222-222222222222', 'flat', 'Heritage Brick Residential Studio', 'Charming brownstone residential flat with exposed original red brick, stained glass accents, and vintage clawfoot bathtub.', 'Historic Quarter', 185, 'approved'),
-('f1090000-0000-4000-a000-000000000009', 'b1111111-1111-4111-b111-111111111111', 'flat', 'Panoramic Bay Highrise Suite', 'Luxury highrise corner residence with floor-to-ceiling glass wall framing ocean sunsets, private sauna, and valet parking.', 'Coastal Promenade', 295, 'approved'),
-('f1100000-0000-4000-a000-000000000010', 'b2222222-2222-4222-b222-222222222222', 'flat', 'Cobblestone Village Garden Flat', 'Quiet European-style residential flat nestled in cobblestone alley, complete with ivy-covered private courtyard and herb garden.', 'Old Town Square', 210, 'approved'),
+('e1111111-1111-4111-e111-111111111111', 'b1111111-1111-4111-b111-111111111111', 'flat', 'Skyline Luxury Penthouse Loft', 'Ultra-modern 2-bedroom penthouse with panoramic city skyline views, private terrace, high-speed fiber internet, and smart home automation.', 'Lazimpat, Kathmandu', 250, 'approved'),
+('e4444444-4444-4444-e444-444444444444', 'b2222222-2222-4222-b222-222222222222', 'flat', 'Minimalist Waterfront Studio Apartment', 'Sleek, minimalist residential flat with floor-to-ceiling windows, rain shower, fully stocked chef kitchen, and private parking space.', 'Lakeside, Pokhara', 190, 'approved'),
+('f1010000-0000-4000-a000-000000000001', 'b1111111-1111-4111-b111-111111111111', 'flat', 'Highline Modern Duplex Flat', 'Spacious two-story duplex flat with architectural floating stairs, double-height ceiling, private balcony, and 24/7 concierge.', 'Jhamsikhel, Lalitpur', 310, 'approved'),
+('f1020000-0000-4000-a000-000000000002', 'b2222222-2222-4222-b222-222222222222', 'flat', 'Boho-Chic Midtown Garden Residence', 'Cozy garden-level residence with private brick patio, lush indoor plants, oak hardwood floors, and ambient warm fireplace.', 'Thamel, Kathmandu', 175, 'approved'),
+('f1030000-0000-4000-a000-000000000003', 'b1111111-1111-4111-b111-111111111111', 'flat', 'Urban Industrial Loft & Terrace', 'Authentic converted factory loft featuring steel beams, polished concrete floors, custom acoustic insulation, and skyline rooftop access.', 'Patan Durbar Square, Lalitpur', 220, 'approved'),
+('f1040000-0000-4000-a000-000000000004', 'b2222222-2222-4222-b222-222222222222', 'flat', 'Scandinavian Eco Smart Flat', 'Energy-efficient 1-bedroom flat built with sustainable pine, smart climate control, workstation nook, and sunlit bay windows.', 'Boudha, Kathmandu', 160, 'approved'),
+('f1050000-0000-4000-a000-000000000005', 'b1111111-1111-4111-b111-111111111111', 'flat', 'Metropolitan Parkview Apartment', 'Elegant corner flat directly overlooking city park grounds. Features marble bathroom, sub-zero appliances, and designer furnishings.', 'Maharajgunj, Kathmandu', 280, 'approved'),
+('f1060000-0000-4000-a000-000000000006', 'b2222222-2222-4222-b222-222222222222', 'flat', 'Sunset Terrace Executive Suite', 'Premium executive suite featuring expansive outdoor dining lounge, private Jacuzzi, wine cooler, and keyless smart entry.', 'New Baneshwor, Kathmandu', 340, 'approved'),
+('f1070000-0000-4000-a000-000000000007', 'b1111111-1111-4111-b111-111111111111', 'flat', 'The Glass Horizon Micro Suite', 'Ultra-functional compact smart flat designed for remote professionals, featuring ergonomic sit-stand desk and gigabit Wi-Fi.', 'Hattisar, Kathmandu', 145, 'approved'),
+('f1080000-0000-4000-a000-000000000008', 'b2222222-2222-4222-b222-222222222222', 'flat', 'Heritage Brick Residential Studio', 'Charming brownstone residential flat with exposed original red brick, stained glass accents, and vintage clawfoot bathtub.', 'Bhaktapur Durbar Square', 185, 'approved'),
+('f1090000-0000-4000-a000-000000000009', 'b1111111-1111-4111-b111-111111111111', 'flat', 'Panoramic Bay Highrise Suite', 'Luxury highrise corner residence with floor-to-ceiling glass wall framing ocean sunsets, private sauna, and valet parking.', 'Sarangkot, Pokhara', 295, 'approved'),
+('f1100000-0000-4000-a000-000000000010', 'b2222222-2222-4222-b222-222222222222', 'flat', 'Cobblestone Village Garden Flat', 'Quiet European-style residential flat nestled in cobblestone alley, complete with ivy-covered private courtyard and herb garden.', 'Kirtipur, Kathmandu', 210, 'approved'),
 
-('e2222222-2222-4222-e222-222222222222', 'b1111111-1111-4111-b111-111111111111', 'venue', 'Grand Glasshouse Event Pavilion', 'Stunning glass-encased event venue perfect for corporate galas, private dinners, product launches, and luxury wedding receptions.', 'Waterfront Park Avenue', 850, 'approved'),
-('e5555555-5555-4555-e555-555555555555', 'b2222222-2222-4222-b222-222222222222', 'venue', 'The Industrial Brick Warehouse Venue', 'Rustic chic exposed-brick venue spanning 4,000 sq ft with industrial lighting, full sound system, and stage setup.', 'Arts District', 600, 'approved'),
-('v2010000-0000-4000-a000-000000000001', 'b1111111-1111-4111-b111-111111111111', 'venue', 'Velvet Lounge & Private Ballroom', 'Opulent velvet-adorned ballroom with crystal chandeliers, private cocktail bar, VIP lounge area, and built-in DJ booth.', 'Grand Boulevard', 950, 'approved'),
-('v2020000-0000-4000-a000-000000000002', 'b2222222-2222-4222-b222-222222222222', 'venue', 'Rooftop Terrace & Sunset Pavilion', 'Open-air highrise rooftop venue with 360-degree skyline view, ambient fire pits, weatherproof cabanas, and catering kitchen prep area.', 'Highrise Tower Top', 780, 'approved'),
-('v2030000-0000-4000-a000-000000000003', 'b1111111-1111-4111-b111-111111111111', 'venue', 'Underground Cellar & Acoustic Hall', 'Atmospheric subterranean venue with vaulted brick ceilings, acoustic treatment, warm mood lighting, and private entrance.', 'Old Substation Alley', 520, 'approved'),
-('v2040000-0000-4000-a000-000000000004', 'b2222222-2222-4222-b222-222222222222', 'venue', 'Botanical Garden Courtyard Pavilion', 'Lush glass greenhouse venue surrounded by exotic plants and fountains, perfect for pop-up exhibitions, cocktail parties, and photo shoots.', 'Conservatory Grounds', 710, 'approved'),
+('e2222222-2222-4222-e222-222222222222', 'b1111111-1111-4111-b111-111111111111', 'venue', 'Grand Glasshouse Event Pavilion', 'Stunning glass-encased event venue perfect for corporate galas, private dinners, product launches, and luxury wedding receptions.', 'Phewa Lakeside, Pokhara', 850, 'approved'),
+('e5555555-5555-4555-e555-555555555555', 'b2222222-2222-4222-b222-222222222222', 'venue', 'The Industrial Brick Warehouse Venue', 'Rustic chic exposed-brick venue spanning 4,000 sq ft with industrial lighting, full sound system, and stage setup.', 'Kupondole, Lalitpur', 600, 'approved'),
+('v2010000-0000-4000-a000-000000000001', 'b1111111-1111-4111-b111-111111111111', 'venue', 'Velvet Lounge & Private Ballroom', 'Opulent velvet-adorned ballroom with crystal chandeliers, private cocktail bar, VIP lounge area, and built-in DJ booth.', 'Durbarmarg, Kathmandu', 950, 'approved'),
+('v2020000-0000-4000-a000-000000000002', 'b2222222-2222-4222-b222-222222222222', 'venue', 'Rooftop Terrace & Sunset Pavilion', 'Open-air highrise rooftop venue with 360-degree skyline view, ambient fire pits, weatherproof cabanas, and catering kitchen prep area.', 'Naxal, Kathmandu', 780, 'approved'),
+('v2030000-0000-4000-a000-000000000003', 'b1111111-1111-4111-b111-111111111111', 'venue', 'Underground Cellar & Acoustic Hall', 'Atmospheric subterranean venue with vaulted brick ceilings, acoustic treatment, warm mood lighting, and private entrance.', 'Lazimpat, Kathmandu', 520, 'approved'),
+('v2040000-0000-4000-a000-000000000004', 'b2222222-2222-4222-b222-222222222222', 'venue', 'Botanical Garden Courtyard Pavilion', 'Lush glass greenhouse venue surrounded by exotic plants and fountains, perfect for pop-up exhibitions, cocktail parties, and photo shoots.', 'Godavari, Lalitpur', 710, 'approved'),
 
-('e3333333-3333-4333-e333-333333333333', 'b1111111-1111-4111-b111-111111111111', 'studio', 'Neon Light Photography & Creator Studio', 'Fully equipped creative studio with cyclorama wall, professional RGB lighting grid, podcasting suite, and private green room.', 'SoHo Creative Hub', 180, 'approved'),
-('s3010000-0000-4000-a000-000000000001', 'b2222222-2222-4222-b222-222222222222', 'studio', 'Pop-Up Boutique Retail Gallery', 'Street-level retail showroom with high foot-traffic storefront windows, modular display racks, POS checkout counter, and fitting rooms.', 'Fashion District Avenue', 240, 'approved'),
-('s3020000-0000-4000-a000-000000000002', 'b1111111-1111-4111-b111-111111111111', 'studio', 'Acoustic Podcasting & Broadcast Studio', 'Sound-isolated podcast suite with Shure SM7B microphones, Rodecaster Pro II console, 4K camera multi-cam setup, and live streaming gear.', 'Media Village Tech Hub', 160, 'approved'),
-('s3030000-0000-4000-a000-000000000003', 'b2222222-2222-4222-b222-222222222222', 'studio', 'Artisan Craft & Design Atelier', 'Sun-drenched studio space with drafting tables, ceramics wheel, heavy-duty workbenches, utility sinks, and gallery lighting grid.', 'Designers Square', 210, 'approved'),
-('s3040000-0000-4000-a000-000000000004', 'b1111111-1111-4111-b111-111111111111', 'studio', 'High-Fashion Runway & Fitting Studio', 'Sleek fashion studio with 50ft catwalk runway, full-length mirror wall, steamer equipment, makeup stations, and private changing rooms.', 'Garment District', 290, 'approved')
+('e3333333-3333-4333-e333-333333333333', 'b1111111-1111-4111-b111-111111111111', 'studio', 'Neon Light Photography & Creator Studio', 'Fully equipped creative studio with cyclorama wall, professional RGB lighting grid, podcasting suite, and private green room.', 'Jhamsikhel, Lalitpur', 180, 'approved'),
+('s3010000-0000-4000-a000-000000000001', 'b2222222-2222-4222-b222-222222222222', 'studio', 'Pop-Up Boutique Retail Gallery', 'Street-level retail showroom with high foot-traffic storefront windows, modular display racks, POS checkout counter, and fitting rooms.', 'New Road, Kathmandu', 240, 'approved'),
+('s3020000-0000-4000-a000-000000000002', 'b1111111-1111-4111-b111-111111111111', 'studio', 'Acoustic Podcasting & Broadcast Studio', 'Sound-isolated podcast suite with Shure SM7B microphones, Rodecaster Pro II console, 4K camera multi-cam setup, and live streaming gear.', 'Kamaladi, Kathmandu', 160, 'approved'),
+('s3030000-0000-4000-a000-000000000003', 'b2222222-2222-4222-b222-222222222222', 'studio', 'Artisan Craft & Design Atelier', 'Sun-drenched studio space with drafting tables, ceramics wheel, heavy-duty workbenches, utility sinks, and gallery lighting grid.', 'Patan, Lalitpur', 210, 'approved'),
+('s3040000-0000-4000-a000-000000000004', 'b1111111-1111-4111-b111-111111111111', 'studio', 'High-Fashion Runway & Fitting Studio', 'Sleek fashion studio with 50ft catwalk runway, full-length mirror wall, steamer equipment, makeup stations, and private changing rooms.', 'Putalisadak, Kathmandu', 290, 'approved')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.property_images (id, property_id, storage_path) VALUES

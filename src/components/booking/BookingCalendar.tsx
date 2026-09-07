@@ -109,7 +109,7 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({ property }) =>
     <Card className="p-6 border-[#E11D2E]/30 shadow-[0_0_30px_rgba(225,29,46,0.08)] sticky top-24">
       <div className="flex items-center justify-between pb-4 mb-4 border-b border-[#262626]">
         <div>
-          <span className="text-2xl font-bold text-white">${currentRateAmount}</span>
+          <span className="text-2xl font-bold text-white">रू {currentRateAmount.toLocaleString('en-NP')}</span>
           <span className="text-xs text-zinc-400 font-normal"> / {rateType.replace('ly', '')}</span>
         </div>
         <div className="w-48">
@@ -159,11 +159,11 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({ property }) =>
           </div>
           <div className="flex justify-between text-zinc-400">
             <span>Rate:</span>
-            <span className="font-semibold text-zinc-200">${currentRateAmount} / {rateType.replace('ly', '')}</span>
+            <span className="font-semibold text-zinc-200">रू {currentRateAmount.toLocaleString('en-NP')} / {rateType.replace('ly', '')}</span>
           </div>
           <div className="pt-2 border-t border-[#262626] flex justify-between text-sm font-bold text-white">
             <span>Total Estimated Price:</span>
-            <span className="text-[#E11D2E] text-base">${totalPrice}</span>
+            <span className="text-[#E11D2E] text-base">रू {totalPrice.toLocaleString('en-NP')}</span>
           </div>
         </div>
 

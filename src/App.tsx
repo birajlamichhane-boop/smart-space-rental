@@ -37,10 +37,10 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; allowedRoles?: strin
   children,
   allowedRoles,
 }) => {
-  const { user, loading: authLoading } = useAuth()
-  const { role, loading: roleLoading } = useRole()
+  const { user, profile, loading } = useAuth()
+  const role = profile?.role ?? null
 
-  if (authLoading || roleLoading) {
+  if (loading) {
     return (
       <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center">
         <div className="w-8 h-8 rounded-full border-2 border-[#E11D2E] border-t-transparent animate-spin" />

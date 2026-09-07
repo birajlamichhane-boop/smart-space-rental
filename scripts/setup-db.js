@@ -2,8 +2,13 @@ import fs from 'fs'
 import path from 'path'
 import pg from 'pg'
 
-const pass = 'hRUnjbeSEbMR3d1a'
-const ref = 'fdxflvrqchtpmqmfuztc'
+const pass = process.env.SUPABASE_DB_PASSWORD
+const ref = process.env.SUPABASE_PROJECT_REF
+
+if (!pass || !ref) {
+  console.error('Set SUPABASE_DB_PASSWORD and SUPABASE_PROJECT_REF before running npm run db:setup.')
+  process.exit(1)
+}
 
 const connectionStrings = [
   `postgres://postgres:${encodeURIComponent(pass)}@db.${ref}.supabase.co:5432/postgres`,

@@ -111,3 +111,63 @@
   }
 }
 
+/* Luxury hospitality palette: ivory surfaces, eucalyptus accents, champagne detail. */
+:root {
+  --bg-main: #F4EFE7;
+  --bg-surface: #FFFBF5;
+  --bg-elevated: #E9E0D4;
+  --border-color: #D9CDBD;
+  --brand-red: #1F6B55;
+  --brand-hover: #2D876C;
+}
+
+body {
+  background-color: var(--bg-main) !important;
+  color: #1B2923 !important;
+}
+
+.glass-nav {
+  background-color: rgba(255, 251, 245, 0.88) !important;
+  border-color: var(--border-color) !important;
+}
+
+.ambient-glow {
+  background: radial-gradient(circle, rgba(31, 107, 85, 0.12) 0%, rgba(31, 107, 85, 0) 70%) !important;
+}
+
+.card-hover:hover {
+  border-color: rgba(31, 107, 85, 0.45) !important;
+  box-shadow: 0 8px 30px -4px rgba(31, 107, 85, 0.16) !important;
+}
+
+::-webkit-scrollbar-track { background: #F4EFE7; }
+::-webkit-scrollbar-thumb { background: #CBBEAF; }
+::-webkit-scrollbar-thumb:hover { background: #1F6B55; }
+
+[class*="bg-[#0A0A0B]"] { background-color: #F4EFE7 !important; }
+[class*="bg-[#141416]"] { background-color: #FFFBF5 !important; }
+[class*="bg-[#1C1C1F]"] { background-color: #E9E0D4 !important; }
+[class*="border-[#262626]"] { border-color: #D9CDBD !important; }
+[class*="text-[#F5F5F5]"], [class~="text-white"] { color: #1B2923 !important; }
+[class*="text-[#E11D2E]"], [class*="border-[#E11D2E]"], [class*="fill-[#E11D2E]"] { color: #1F6B55 !important; border-color: #1F6B55 !important; }
+[class*="bg-[#E11D2E]"] { background-color: #1F6B55 !important; }
+[class*="text-zinc-100"], [class*="text-zinc-200"], [class*="text-zinc-300"] { color: #34443C !important; }
+[class*="text-zinc-400"] { color: #66736B !important; }
+[class*="text-zinc-500"] { color: #7E8982 !important; }
+[class*="text-zinc-600"] { color: #9AA29D !important; }
+[class*="bg-zinc-800"] { background-color: #E5DDD2 !important; }
+[class*="border-zinc-700"], [class*="border-zinc-800"] { border-color: #CBBEAF !important; }
+[class*="text-amber-400"], [class*="text-amber-300"] { color: #A67C36 !important; }
+[class*="text-[#FF6672]"] { color: #B18445 !important; }
+[class*="border-amber-500"] { border-color: rgba(166, 124, 54, 0.4) !important; }
+[class*="bg-amber-500"] { background-color: rgba(166, 124, 54, 0.12) !important; }
+[class*="text-emerald-400"] { color: #28745C !important; }
+[class*="bg-emerald-600"] { background-color: #28745C !important; }
+[class*="hover:bg-emerald-500"]:hover { background-color: #368B6C !important; }
+[class*="text-rose-400"], [class*="text-rose-500"] { color: #B04C49 !important; }
+
+.hero-light-text [class~="text-white"],
+.hero-light-text [class*="text-zinc-200"] { color: #FFFFFF !important; }
+[class*="bg-[#E11D2E]"][class~="text-white"] { color: #FFFFFF !important; }
+[class*="bg-[#E11D2E]"] svg { color: #FFFFFF !important; }
+

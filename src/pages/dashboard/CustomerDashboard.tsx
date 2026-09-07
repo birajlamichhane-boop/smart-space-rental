@@ -107,7 +107,7 @@ export const CustomerDashboard: React.FC = () => {
                     </p>
                   </div>
                   <div className="flex items-center justify-between sm:justify-end gap-4 border-t sm:border-t-0 pt-3 sm:pt-0 border-[#262626]">
-                    <span className="text-lg font-bold text-white">${b.total_price}</span>
+                    <span className="text-lg font-bold text-white">रू {b.total_price?.toLocaleString('en-NP')}</span>
                     <Link to={`/bookings/${b.id}/confirm`}>
                       <Button variant="outline" size="sm">
                         Invoice & Summary
@@ -142,7 +142,7 @@ export const CustomerDashboard: React.FC = () => {
                     <span className="text-[11px] text-zinc-400">{new Date(inv.generated_at).toLocaleDateString()}</span>
                   </div>
                   <div className="text-right">
-                    <span className="text-xs font-bold text-[#E11D2E] block">${inv.amount}</span>
+                    <span className="text-xs font-bold text-[#E11D2E] block">रू {inv.amount.toLocaleString('en-NP')}</span>
                     <Link to={`/bookings/${inv.booking_id}/confirm`} className="text-[10px] text-zinc-400 hover:text-white flex items-center gap-1 mt-0.5 justify-end">
                       <Download className="w-3 h-3" /> View PDF
                     </Link>

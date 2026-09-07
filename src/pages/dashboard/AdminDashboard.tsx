@@ -86,7 +86,7 @@ export const AdminDashboard: React.FC = () => {
         <StatCard
           title="Platform Revenue"
           value={totalRevenue}
-          prefix="$"
+          prefix="रू "
           icon={DollarSign}
           trend="+24% Q2"
         />
@@ -95,7 +95,7 @@ export const AdminDashboard: React.FC = () => {
       {/* Analytics Chart & Quick Approvals */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <RevenueChart data={revenueData} title="System-wide Revenue Trend ($)" />
+          <RevenueChart data={revenueData} title="System-wide Revenue Trend (रू)" />
         </div>
 
         <Card className="p-6 space-y-4">

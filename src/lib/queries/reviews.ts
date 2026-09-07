@@ -2,17 +2,26 @@ import { supabase } from '../supabaseClient'
 import { Review } from '../../types/database'
 
 export async function getPropertyReviews(propertyId: string): Promise<Review[]> {
-  const { data, error } = await supabase
-    .from('reviews')
-    .select(`
-      *,
-      customer:profiles(*)
-    `)
-    .eq('property_id', propertyId)
-    .order('created_at', { ascending: false })
+  if (typeof window !== 'undefined' && localStorage.getItem('smartspace_demo_session')) {
+    return []
+  }
 
-  if (error) throw error
-  return data as Review[]
+  try {
+    const { data, error } = await supabase
+      .from('reviews')
+      .select(`
+        *,
+        customer:profiles(*)
+      `)
+      .eq('property_id', propertyId)
+      .order('created_at', { ascending: false })
+
+    if (error) throw error
+    return data as Review[]
+  } catch (error) {
+    console.warn('Reviews unavailable, showing the property without reviews:', error)
+    return []
+  }
 }
 
 export async function createReview(params: {

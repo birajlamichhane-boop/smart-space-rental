@@ -42,16 +42,30 @@ cp .env.example .env
 Ensure `.env` contains your Supabase project credentials:
 
 ```env
-VITE_SUPABASE_URL=https://fdxflvrqchtpmqmfuztc.supabase.co
-VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_XW7Bb3dFWhLWxRbkrZFzlA_Uk8yGQYz
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
 ```
 
-### 3. Supabase Database Schema Setup
-Execute the SQL script located in `supabase/schema.sql` inside your Supabase SQL Editor. This will create:
+### 3. Supabase Database Setup
+There are two supported setup paths.
+
+**SQL Editor (recommended):** Open the Supabase Dashboard, choose **SQL Editor**, paste the complete `supabase/full_setup.sql` file, and click **Run**. This creates:
 - Tables: `profiles`, `properties`, `property_images`, `pricing_rules`, `bookings`, `reviews`, `invoices`, `wishlist`.
 - `btree_gist` extension and overlap exclusion constraint on `bookings`.
 - `handle_new_user` Postgres trigger to auto-populate user profiles with metadata role.
 - Row Level Security (RLS) policies for all tables.
+
+**Command line:** Set the database password and project reference from Supabase, then run:
+
+```bash
+export SUPABASE_DB_PASSWORD='your-database-password'
+export SUPABASE_PROJECT_REF='your-project-reference'
+npm run db:setup
+```
+
+The script tries the supported Supabase direct and pooler connection regions. If your network blocks those connections, use the SQL Editor path.
+
+After setup, create users through the app registration form or Supabase Authentication. New users receive the role provided in registration metadata.
 
 ### 4. Running Locally
 Start the development server:
@@ -62,6 +76,8 @@ npm run dev
 
 Open [http://localhost:5173](http://localhost:5173) in your browser.
 
+For a complete offline UI demo, the app includes local demo sessions. Open `/login` and choose any role. Demo reservations, wishlist changes, confirmations, and invoices are stored in browser local storage; real users use Supabase automatically.
+
 ---
 
 ## Production Build & Preview
@@ -70,6 +86,13 @@ To build for production and preview locally:
 ```bash
 npm run build
 npm run preview
+```
+
+If dependencies were copied from another machine or the build reports a missing Rollup native package, recreate them for your OS:
+
+```bash
+rm -rf node_modules package-lock.json
+npm install
 ```
 
 ## Deployment

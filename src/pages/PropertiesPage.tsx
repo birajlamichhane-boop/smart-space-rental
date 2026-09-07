@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { PropertyCard } from '../components/property/PropertyCard'
 import { PropertyFilters } from '../components/property/PropertyFilters'
-import { getApprovedProperties } from '../lib/queries/properties'
+import { getApprovedProperties, DEMO_PROPERTIES } from '../lib/queries/properties'
 import { Property, PropertyType } from '../types/database'
 import { useAuth } from '../hooks/useAuth'
 import { getCustomerWishlist, addToWishlist, removeFromWishlist } from '../lib/queries/wishlist'
@@ -12,13 +12,14 @@ import { Card } from '../components/ui/card'
 export const PropertiesPage: React.FC = () => {
   const [searchParams] = useSearchParams()
   const initialSearch = searchParams.get('search') || ''
+  const initialType = searchParams.get('type') as PropertyType | null
 
   const { user } = useAuth()
-  const [properties, setProperties] = useState<Property[]>([])
+  const [properties, setProperties] = useState<Property[]>(DEMO_PROPERTIES)
   const [wishlistIds, setWishlistIds] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
 
-  const [type, setType] = useState<PropertyType | 'all'>('all')
+  const [type, setType] = useState<PropertyType | 'all'>(initialType || 'all')
   const [search, setSearch] = useState(initialSearch)
   const [minPrice, setMinPrice] = useState('')
   const [maxPrice, setMaxPrice] = useState('')
@@ -31,7 +32,7 @@ export const PropertiesPage: React.FC = () => {
   }, [type, search, minPrice, maxPrice, user])
 
   const fetchProperties = async () => {
-    setLoading(true)
+    if (properties.length === 0) setLoading(true)
     try {
       const data = await getApprovedProperties({
         type,

@@ -72,7 +72,7 @@ export const MyBookingsPage: React.FC = () => {
               <div className="flex items-center justify-between md:justify-end gap-6 border-t md:border-t-0 pt-4 md:pt-0 border-[#262626]">
                 <div className="text-right">
                   <span className="text-xs text-zinc-500 block">Total Price</span>
-                  <span className="text-xl font-bold text-white">${booking.total_price}</span>
+                  <span className="text-xl font-bold text-white">रू {booking.total_price?.toLocaleString('en-NP')}</span>
                 </div>
                 <Link to={`/bookings/${booking.id}/confirm`}>
                   <Button variant="outline" size="sm" className="flex items-center gap-1.5">

@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "tsc --noEmit",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "db:setup": "node scripts/setup-db.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.48.1",

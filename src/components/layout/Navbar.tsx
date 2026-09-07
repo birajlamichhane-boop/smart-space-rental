@@ -1,14 +1,28 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { useRole } from '../../hooks/useRole'
-import { Building2, User, LogOut, Heart, Calendar, LayoutDashboard, CheckSquare, PlusCircle } from 'lucide-react'
+import { User, LogOut, Heart, Calendar, LayoutDashboard, CheckSquare, PlusCircle, Menu, X } from 'lucide-react'
+import { BrandMark } from './BrandMark'
 
 export const Navbar: React.FC = () => {
   const { user, profile, signOut } = useAuth()
   const { role, isAdmin, isOwner, isCustomer } = useRole()
   const navigate = useNavigate()
+  const location = useLocation()
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+
+  useEffect(() => {
+    setMobileOpen(false)
+  }, [location.pathname])
+
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : ''
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [mobileOpen])
 
   const handleSignOut = async () => {
     await signOut()
@@ -19,11 +33,9 @@ export const Navbar: React.FC = () => {
     <nav className="glass-nav">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Brand Logo */}
-        <Link to="/" className="flex items-center gap-2 text-white font-bold text-xl tracking-tight group">
-          <div className="w-9 h-9 rounded-lg bg-[#E11D2E] flex items-center justify-center shadow-[0_0_15px_rgba(225,29,46,0.5)] group-hover:scale-105 transition-transform">
-            <Building2 className="w-5 h-5 text-white" />
-          </div>
-          <span>Smart<span className="text-[#E11D2E]">Space</span></span>
+        <Link to="/" className="group flex items-center gap-3 text-xl font-bold tracking-tight text-[#1B2923]">
+          <BrandMark />
+          <span>Smart<span className="text-[#1F6B55]">Space</span></span>
         </Link>
 
         {/* Navigation Links */}
@@ -66,6 +78,16 @@ export const Navbar: React.FC = () => {
             </Link>
           )}
         </div>
+
+        <button
+          type="button"
+          aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-expanded={mobileOpen}
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="md:hidden rounded-lg border border-[#262626] bg-[#141416] p-2.5 text-zinc-200 transition-colors hover:border-[#E11D2E] hover:text-white"
+        >
+          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
 
         {/* Auth / User Section */}
         <div className="flex items-center gap-4">
@@ -127,6 +149,47 @@ export const Navbar: React.FC = () => {
           )}
         </div>
       </div>
+
+      {mobileOpen && (
+        <div className="md:hidden border-t border-[#262626] bg-[#0A0A0B] px-6 py-4 shadow-2xl">
+          <div className="mx-auto max-w-6xl space-y-1">
+            <Link to="/properties" className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-zinc-200 hover:bg-[#141416] hover:text-white">
+              Explore Spaces
+            </Link>
+            {user && (
+              <Link to="/dashboard" className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-zinc-200 hover:bg-[#141416] hover:text-white">
+                <LayoutDashboard className="h-4 w-4 text-[#E11D2E]" /> Dashboard
+              </Link>
+            )}
+            {isCustomer && (
+              <>
+                <Link to="/bookings" className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-zinc-200 hover:bg-[#141416] hover:text-white">
+                  <Calendar className="h-4 w-4 text-zinc-400" /> My Bookings
+                </Link>
+                <Link to="/wishlist" className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-zinc-200 hover:bg-[#141416] hover:text-white">
+                  <Heart className="h-4 w-4 text-[#E11D2E]" /> Wishlist
+                </Link>
+              </>
+            )}
+            {isOwner && (
+              <Link to="/manage/properties" className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-zinc-200 hover:bg-[#141416] hover:text-white">
+                <PlusCircle className="h-4 w-4 text-emerald-400" /> Manage Spaces
+              </Link>
+            )}
+            {isAdmin && (
+              <Link to="/manage/approvals" className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-zinc-200 hover:bg-[#141416] hover:text-white">
+                <CheckSquare className="h-4 w-4 text-amber-400" /> Approvals
+              </Link>
+            )}
+            {!user && (
+              <div className="mt-3 grid grid-cols-2 gap-2 border-t border-[#262626] pt-3">
+                <Link to="/login" className="rounded-lg border border-[#262626] px-3 py-3 text-center text-sm font-medium text-zinc-200 hover:border-[#E11D2E]">Log In</Link>
+                <Link to="/register" className="rounded-lg bg-[#E11D2E] px-3 py-3 text-center text-sm font-medium text-white hover:bg-[#FF2E44]">Get Started</Link>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </nav>
   )
 }

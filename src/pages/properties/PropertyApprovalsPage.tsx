@@ -83,7 +83,7 @@ export const PropertyApprovalsPage: React.FC = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4 font-bold text-white text-sm">
-                      ${prop.base_price} / day
+                      रू {prop.base_price.toLocaleString('en-NP')} / day
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">

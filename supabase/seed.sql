@@ -26,14 +26,14 @@ ON CONFLICT (id) DO NOTHING;
 
 -- 2. ENSURE PROFILES
 INSERT INTO public.profiles (id, role, full_name, phone) VALUES
-('a1111111-1111-4111-a111-111111111111', 'admin', 'Alex Vance (Admin)', '+1 555-0101'),
-('a2222222-2222-4222-a222-222222222222', 'admin', 'Sarah Jenkins (Admin)', '+1 555-0102'),
-('b1111111-1111-4111-b111-111111111111', 'owner', 'Marcus Sterling (Owner)', '+1 555-0201'),
-('b2222222-2222-4222-b222-222222222222', 'owner', 'Elena Rostova (Owner)', '+1 555-0202'),
-('c1111111-1111-4111-c111-111111111111', 'staff', 'David Miller (Staff)', '+1 555-0301'),
-('c2222222-2222-4222-c222-222222222222', 'staff', 'Rachel Green (Staff)', '+1 555-0302'),
-('d1111111-1111-4111-d111-111111111111', 'customer', 'Jordan Lee (Customer)', '+1 555-0401'),
-('d2222222-2222-4222-d222-222222222222', 'customer', 'Claire Bennett (Customer)', '+1 555-0402')
+('a1111111-1111-4111-a111-111111111111', 'admin', 'Pragya Shrestha (Admin)', '+977 9841000001'),
+('a2222222-2222-4222-a222-222222222222', 'admin', 'Ramesh Karki (Admin)', '+977 9841000002'),
+('b1111111-1111-4111-b111-111111111111', 'owner', 'Aayush Thapa (Owner)', '+977 9841000003'),
+('b2222222-2222-4222-b222-222222222222', 'owner', 'Anisha Gurung (Owner)', '+977 9841000004'),
+('c1111111-1111-4111-c111-111111111111', 'staff', 'Nabin Gurung (Staff)', '+977 9841000005'),
+('c2222222-2222-4222-c222-222222222222', 'staff', 'Manisha Rai (Staff)', '+977 9841000006'),
+('d1111111-1111-4111-d111-111111111111', 'customer', 'Sita Sharma (Customer)', '+977 9841000007'),
+('d2222222-2222-4222-d222-222222222222', 'customer', 'Bikash Adhikari (Customer)', '+977 9841000008')
 ON CONFLICT (id) DO UPDATE SET
   role = EXCLUDED.role,
   full_name = EXCLUDED.full_name,
@@ -41,11 +41,11 @@ ON CONFLICT (id) DO UPDATE SET
 
 -- 3. DEMO PROPERTIES
 INSERT INTO public.properties (id, owner_id, type, title, description, location, base_price, status) VALUES
-('e1111111-1111-4111-e111-111111111111', 'b1111111-1111-4111-b111-111111111111', 'flat', 'Skyline Luxury Penthouse Loft', 'Ultra-modern 2-bedroom penthouse with panoramic city skyline views, private terrace, high-speed fiber internet, and smart home automation.', 'Downtown Financial District', 250, 'approved'),
-('e2222222-2222-4222-e222-222222222222', 'b1111111-1111-4111-b111-111111111111', 'venue', 'Grand Glasshouse Event Pavilion', 'Stunning glass-encased event venue perfect for corporate galas, private dinners, product launches, and luxury wedding receptions.', 'Waterfront Park Avenue', 850, 'approved'),
-('e3333333-3333-4333-e333-333333333333', 'b1111111-1111-4111-b111-111111111111', 'studio', 'Neon Light Photography & Creator Studio', 'Fully equipped creative studio with cyclorama wall, professional RGB lighting grid, podcasting suite, and private green room.', 'SoHo Creative Hub', 180, 'approved'),
-('e4444444-4444-4444-e444-444444444444', 'b2222222-2222-4222-b222-222222222222', 'flat', 'Minimalist Waterfront Studio Apartment', 'Sleek, minimalist residential flat with floor-to-ceiling windows, rain shower, fully stocked chef kitchen, and private parking space.', 'Marina Bay District', 190, 'approved'),
-('e5555555-5555-4555-e555-555555555555', 'b2222222-2222-4222-b222-222222222222', 'venue', 'The Industrial Brick Warehouse Venue', 'Rustic chic exposed-brick venue spanning 4,000 sq ft with industrial lighting, full sound system, and stage setup.', 'Arts District', 600, 'approved')
+('e1111111-1111-4111-e111-111111111111', 'b1111111-1111-4111-b111-111111111111', 'flat', 'Skyline Luxury Penthouse Loft', 'Ultra-modern 2-bedroom penthouse with panoramic city skyline views, private terrace, high-speed fiber internet, and smart home automation.', 'Lazimpat, Kathmandu', 250, 'approved'),
+('e2222222-2222-4222-e222-222222222222', 'b1111111-1111-4111-b111-111111111111', 'venue', 'Grand Glasshouse Event Pavilion', 'Stunning glass-encased event venue perfect for corporate galas, private dinners, product launches, and luxury wedding receptions.', 'Phewa Lakeside, Pokhara', 850, 'approved'),
+('e3333333-3333-4333-e333-333333333333', 'b1111111-1111-4111-b111-111111111111', 'studio', 'Neon Light Photography & Creator Studio', 'Fully equipped creative studio with cyclorama wall, professional RGB lighting grid, podcasting suite, and private green room.', 'Jhamsikhel, Lalitpur', 180, 'approved'),
+('e4444444-4444-4444-e444-444444444444', 'b2222222-2222-4222-b222-222222222222', 'flat', 'Minimalist Waterfront Studio Apartment', 'Sleek, minimalist residential flat with floor-to-ceiling windows, rain shower, fully stocked chef kitchen, and private parking space.', 'Lakeside, Pokhara', 190, 'approved'),
+('e5555555-5555-4555-e555-555555555555', 'b2222222-2222-4222-b222-222222222222', 'venue', 'The Industrial Brick Warehouse Venue', 'Rustic chic exposed-brick venue spanning 4,000 sq ft with industrial lighting, full sound system, and stage setup.', 'Kupondole, Lalitpur', 600, 'approved')
 ON CONFLICT (id) DO NOTHING;
 
 -- 4. PROPERTY IMAGES

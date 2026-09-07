@@ -177,15 +177,15 @@ export const BookingConfirmPage: React.FC = () => {
           <div className="space-y-2 text-xs">
             <div className="flex justify-between text-zinc-300 print:text-black py-1 border-b border-[#262626]/50">
               <span>Space Reservation Charge</span>
-              <span>${booking.total_price}</span>
+              <span>रू {booking.total_price?.toLocaleString('en-NP')}</span>
             </div>
             <div className="flex justify-between text-zinc-300 print:text-black py-1 border-b border-[#262626]/50">
               <span>Platform Service & Processing Fee</span>
-              <span className="text-emerald-400">$0.00 (Included)</span>
+              <span className="text-emerald-400">रू 0 (Included)</span>
             </div>
             <div className="flex justify-between text-base font-bold text-white print:text-black pt-3">
               <span>Total Amount Paid / Due:</span>
-              <span className="text-[#E11D2E] text-xl font-mono">${booking.total_price}</span>
+              <span className="text-[#E11D2E] text-xl font-mono">रू {booking.total_price?.toLocaleString('en-NP')}</span>
             </div>
           </div>
         </div>

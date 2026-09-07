@@ -9,7 +9,7 @@ export const DEMO_PROPERTIES: Property[] = [
     type: 'flat',
     title: 'Skyline Luxury Penthouse Loft',
     description: 'Ultra-modern 2-bedroom penthouse with panoramic city skyline views, private terrace, high-speed fiber internet, and smart home automation.',
-    location: 'Downtown Financial District',
+    location: 'Lazimpat, Kathmandu',
     base_price: 250,
     status: 'approved',
     created_at: new Date().toISOString(),
@@ -26,7 +26,7 @@ export const DEMO_PROPERTIES: Property[] = [
     type: 'flat',
     title: 'Minimalist Waterfront Studio Apartment',
     description: 'Sleek, minimalist residential flat with floor-to-ceiling windows, rain shower, fully stocked chef kitchen, and private parking space.',
-    location: 'Marina Bay District',
+    location: 'Lakeside, Pokhara',
     base_price: 190,
     status: 'approved',
     created_at: new Date().toISOString(),
@@ -43,7 +43,7 @@ export const DEMO_PROPERTIES: Property[] = [
     type: 'flat',
     title: 'Highline Modern Duplex Flat',
     description: 'Spacious two-story duplex flat with architectural floating stairs, double-height ceiling, private balcony, and 24/7 concierge.',
-    location: 'Hudson Yards West',
+    location: 'Jhamsikhel, Lalitpur',
     base_price: 310,
     status: 'approved',
     created_at: new Date().toISOString(),
@@ -60,7 +60,7 @@ export const DEMO_PROPERTIES: Property[] = [
     type: 'flat',
     title: 'Boho-Chic Midtown Garden Residence',
     description: 'Cozy garden-level residence with private brick patio, lush indoor plants, oak hardwood floors, and ambient warm fireplace.',
-    location: 'Midtown West',
+    location: 'Thamel, Kathmandu',
     base_price: 175,
     status: 'approved',
     created_at: new Date().toISOString(),
@@ -77,7 +77,7 @@ export const DEMO_PROPERTIES: Property[] = [
     type: 'flat',
     title: 'Urban Industrial Loft & Terrace',
     description: 'Authentic converted factory loft featuring steel beams, polished concrete floors, custom acoustic insulation, and skyline rooftop access.',
-    location: 'Tribeca Arts District',
+    location: 'Patan Durbar Square, Lalitpur',
     base_price: 220,
     status: 'approved',
     created_at: new Date().toISOString(),
@@ -94,7 +94,7 @@ export const DEMO_PROPERTIES: Property[] = [
     type: 'flat',
     title: 'Scandinavian Eco Smart Flat',
     description: 'Energy-efficient 1-bedroom flat built with sustainable pine, smart climate control, workstation nook, and sunlit bay windows.',
-    location: 'Greenpoint East',
+    location: 'Boudha, Kathmandu',
     base_price: 160,
     status: 'approved',
     created_at: new Date().toISOString(),
@@ -111,7 +111,7 @@ export const DEMO_PROPERTIES: Property[] = [
     type: 'flat',
     title: 'Metropolitan Parkview Apartment',
     description: 'Elegant corner flat directly overlooking city park grounds. Features marble bathroom, sub-zero appliances, and designer furnishings.',
-    location: 'Central Park South',
+    location: 'Maharajgunj, Kathmandu',
     base_price: 280,
     status: 'approved',
     created_at: new Date().toISOString(),
@@ -128,7 +128,7 @@ export const DEMO_PROPERTIES: Property[] = [
     type: 'flat',
     title: 'Sunset Terrace Executive Suite',
     description: 'Premium executive suite featuring expansive outdoor dining lounge, private Jacuzzi, wine cooler, and keyless smart entry.',
-    location: 'Financial Plaza',
+    location: 'New Baneshwor, Kathmandu',
     base_price: 340,
     status: 'approved',
     created_at: new Date().toISOString(),
@@ -145,7 +145,7 @@ export const DEMO_PROPERTIES: Property[] = [
     type: 'flat',
     title: 'The Glass Horizon Micro Suite',
     description: 'Ultra-functional compact smart flat designed for remote professionals, featuring ergonomic sit-stand desk and gigabit Wi-Fi.',
-    location: 'Tech Corridor North',
+    location: 'Hattisar, Kathmandu',
     base_price: 145,
     status: 'approved',
     created_at: new Date().toISOString(),
@@ -162,7 +162,7 @@ export const DEMO_PROPERTIES: Property[] = [
     type: 'flat',
     title: 'Heritage Brick Residential Studio',
     description: 'Charming brownstone residential flat with exposed original red brick, stained glass accents, and vintage clawfoot bathtub.',
-    location: 'Historic Quarter',
+    location: 'Bhaktapur Durbar Square',
     base_price: 185,
     status: 'approved',
     created_at: new Date().toISOString(),
@@ -179,7 +179,7 @@ export const DEMO_PROPERTIES: Property[] = [
     type: 'flat',
     title: 'Panoramic Bay Highrise Suite',
     description: 'Luxury highrise corner residence with floor-to-ceiling glass wall framing ocean sunsets, private sauna, and valet parking.',
-    location: 'Coastal Promenade',
+    location: 'Sarangkot, Pokhara',
     base_price: 295,
     status: 'approved',
     created_at: new Date().toISOString(),
@@ -196,7 +196,7 @@ export const DEMO_PROPERTIES: Property[] = [
     type: 'flat',
     title: 'Cobblestone Village Garden Flat',
     description: 'Quiet European-style residential flat nestled in cobblestone alley, complete with ivy-covered private courtyard and herb garden.',
-    location: 'Old Town Square',
+    location: 'Kirtipur, Kathmandu',
     base_price: 210,
     status: 'approved',
     created_at: new Date().toISOString(),
@@ -215,7 +215,7 @@ export const DEMO_PROPERTIES: Property[] = [
     type: 'venue',
     title: 'Grand Glasshouse Event Pavilion',
     description: 'Stunning glass-encased event venue perfect for corporate galas, private dinners, product launches, and luxury wedding receptions.',
-    location: 'Waterfront Park Avenue',
+    location: 'Phewa Lakeside, Pokhara',
     base_price: 850,
     status: 'approved',
     created_at: new Date().toISOString(),
@@ -232,7 +232,7 @@ export const DEMO_PROPERTIES: Property[] = [
     type: 'venue',
     title: 'The Industrial Brick Warehouse Venue',
     description: 'Rustic chic exposed-brick venue spanning 4,000 sq ft with industrial lighting, full sound system, and stage setup.',
-    location: 'Arts District',
+    location: 'Kupondole, Lalitpur',
     base_price: 600,
     status: 'approved',
     created_at: new Date().toISOString(),
@@ -249,7 +249,7 @@ export const DEMO_PROPERTIES: Property[] = [
     type: 'venue',
     title: 'Velvet Lounge & Private Ballroom',
     description: 'Opulent velvet-adorned ballroom with crystal chandeliers, private cocktail bar, VIP lounge area, and built-in DJ booth.',
-    location: 'Grand Boulevard',
+    location: 'Durbarmarg, Kathmandu',
     base_price: 950,
     status: 'approved',
     created_at: new Date().toISOString(),
@@ -266,7 +266,7 @@ export const DEMO_PROPERTIES: Property[] = [
     type: 'venue',
     title: 'Rooftop Terrace & Sunset Pavilion',
     description: 'Open-air highrise rooftop venue with 360-degree skyline view, ambient fire pits, weatherproof cabanas, and catering kitchen prep area.',
-    location: 'Highrise Tower Top',
+    location: 'Naxal, Kathmandu',
     base_price: 780,
     status: 'approved',
     created_at: new Date().toISOString(),
@@ -283,7 +283,7 @@ export const DEMO_PROPERTIES: Property[] = [
     type: 'venue',
     title: 'Underground Cellar & Acoustic Hall',
     description: 'Atmospheric subterranean venue with vaulted brick ceilings, acoustic treatment, warm mood lighting, and private entrance.',
-    location: 'Old Substation Alley',
+    location: 'Lazimpat, Kathmandu',
     base_price: 520,
     status: 'approved',
     created_at: new Date().toISOString(),
@@ -300,7 +300,7 @@ export const DEMO_PROPERTIES: Property[] = [
     type: 'venue',
     title: 'Botanical Garden Courtyard Pavilion',
     description: 'Lush glass greenhouse venue surrounded by exotic plants and fountains, perfect for pop-up exhibitions, cocktail parties, and photo shoots.',
-    location: 'Conservatory Grounds',
+    location: 'Godavari, Lalitpur',
     base_price: 710,
     status: 'approved',
     created_at: new Date().toISOString(),
@@ -319,7 +319,7 @@ export const DEMO_PROPERTIES: Property[] = [
     type: 'studio',
     title: 'Neon Light Photography & Creator Studio',
     description: 'Fully equipped creative studio with cyclorama wall, professional RGB lighting grid, podcasting suite, and private green room.',
-    location: 'SoHo Creative Hub',
+    location: 'Jhamsikhel, Lalitpur',
     base_price: 180,
     status: 'approved',
     created_at: new Date().toISOString(),
@@ -336,7 +336,7 @@ export const DEMO_PROPERTIES: Property[] = [
     type: 'studio',
     title: 'Pop-Up Boutique Retail Gallery',
     description: 'Street-level retail showroom with high foot-traffic storefront windows, modular display racks, POS checkout counter, and fitting rooms.',
-    location: 'Fashion District Avenue',
+    location: 'New Road, Kathmandu',
     base_price: 240,
     status: 'approved',
     created_at: new Date().toISOString(),
@@ -353,7 +353,7 @@ export const DEMO_PROPERTIES: Property[] = [
     type: 'studio',
     title: 'Acoustic Podcasting & Broadcast Studio',
     description: 'Sound-isolated podcast suite with Shure SM7B microphones, Rodecaster Pro II console, 4K camera multi-cam setup, and live streaming gear.',
-    location: 'Media Village Tech Hub',
+    location: 'Kamaladi, Kathmandu',
     base_price: 160,
     status: 'approved',
     created_at: new Date().toISOString(),
@@ -370,7 +370,7 @@ export const DEMO_PROPERTIES: Property[] = [
     type: 'studio',
     title: 'Artisan Craft & Design Atelier',
     description: 'Sun-drenched studio space with drafting tables, ceramics wheel, heavy-duty workbenches, utility sinks, and gallery lighting grid.',
-    location: 'Designers Square',
+    location: 'Patan, Lalitpur',
     base_price: 210,
     status: 'approved',
     created_at: new Date().toISOString(),
@@ -387,7 +387,7 @@ export const DEMO_PROPERTIES: Property[] = [
     type: 'studio',
     title: 'High-Fashion Runway & Fitting Studio',
     description: 'Sleek fashion studio with 50ft catwalk runway, full-length mirror wall, steamer equipment, makeup stations, and private changing rooms.',
-    location: 'Garment District',
+    location: 'Putalisadak, Kathmandu',
     base_price: 290,
     status: 'approved',
     created_at: new Date().toISOString(),
@@ -429,7 +429,12 @@ export async function getApprovedProperties(filters?: { type?: PropertyType | 'a
       query = query.or(`title.ilike.%${filters.search}%,location.ilike.%${filters.search}%`)
     }
 
-    const { data, error } = await query.order('created_at', { ascending: false })
+    const { data, error } = await Promise.race([
+      query.order('created_at', { ascending: false }),
+      new Promise<never>((_, reject) => {
+        window.setTimeout(() => reject(new Error('Property request timed out')), 1200)
+      }),
+    ])
 
     if (!error && data && data.length > 0) {
       return data as Property[]
@@ -457,6 +462,10 @@ export async function getApprovedProperties(filters?: { type?: PropertyType | 'a
 }
 
 export async function getPropertyById(id: string): Promise<Property | null> {
+  if (typeof window !== 'undefined' && localStorage.getItem('smartspace_demo_session')) {
+    return DEMO_PROPERTIES.find(p => p.id === id) || DEMO_PROPERTIES[0]
+  }
+
   try {
     const { data, error } = await supabase
       .from('properties')

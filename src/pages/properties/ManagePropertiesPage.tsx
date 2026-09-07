@@ -161,7 +161,7 @@ export const ManagePropertiesPage: React.FC = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4 font-bold text-white text-sm">
-                      ${prop.base_price} / day
+                      रू {prop.base_price.toLocaleString('en-NP')} / day
                     </td>
                     <td className="px-6 py-4">
                       <Badge variant={prop.status}>{prop.status}</Badge>
@@ -221,14 +221,14 @@ export const ManagePropertiesPage: React.FC = () => {
 
           <Input
             label="Location / Address"
-            placeholder="e.g. 123 Main Street, Suite 400"
+            placeholder="e.g. Kupondole Road, Lalitpur"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
           />
 
           <div className="grid grid-cols-3 gap-2">
             <Input
-              label="Base Daily Rate ($)"
+              label="Base Daily Rate (रू)"
               type="number"
               placeholder="150"
               value={basePrice}
@@ -236,14 +236,14 @@ export const ManagePropertiesPage: React.FC = () => {
               required
             />
             <Input
-              label="Hourly Rate ($)"
+              label="Hourly Rate (रू)"
               type="number"
               placeholder="25"
               value={hourlyRate}
               onChange={(e) => setHourlyRate(e.target.value)}
             />
             <Input
-              label="Monthly Rate ($)"
+              label="Monthly Rate (रू)"
               type="number"
               placeholder="3500"
               value={monthlyRate}

@@ -9,12 +9,14 @@ interface PropertyCardProps {
   property: Property;
   isWishlisted?: boolean;
   onToggleWishlist?: (propertyId: string) => void;
+  priority?: boolean;
 }
 
 export const PropertyCard: React.FC<PropertyCardProps> = ({
   property,
   isWishlisted = false,
   onToggleWishlist,
+  priority = false,
 }) => {
   const primaryImage = property.images && property.images.length > 0
     ? property.images[0].storage_path
@@ -33,7 +35,8 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
             src={primaryImage}
             alt={property.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
+            loading={priority ? 'eager' : 'lazy'}
+            decoding="async"
           />
           <div className="absolute top-3 left-3 flex items-center gap-2">
             <Badge variant="neutral" className="bg-black/70 backdrop-blur-md uppercase text-[10px]">
@@ -91,7 +94,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
         <div>
           <span className="text-xs text-zinc-500 block">Starting from</span>
           <span className="text-lg font-bold text-white">
-            ${property.base_price}
+            रू {property.base_price.toLocaleString('en-NP')}
             <span className="text-xs text-zinc-400 font-normal"> / day</span>
           </span>
         </div>

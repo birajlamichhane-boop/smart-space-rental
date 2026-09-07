@@ -4,7 +4,8 @@ import { supabase } from '../lib/supabaseClient'
 import { Card } from '../components/ui/card'
 import { Input } from '../components/ui/input'
 import { Button } from '../components/ui/button'
-import { Building2, AlertCircle, Shield, UserCheck, Key, Sparkles } from 'lucide-react'
+import { AlertCircle, Shield, UserCheck, Key, Sparkles } from 'lucide-react'
+import { BrandMark } from '../components/layout/BrandMark'
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate()
@@ -125,7 +126,7 @@ export const LoginPage: React.FC = () => {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => handleQuickDemoLogin('customer@smartspace.com', 'customer', 'Jordan Lee (Customer)')}
+              onClick={() => handleQuickDemoLogin('customer@smartspace.com', 'customer', 'Sita Sharma (Customer)')}
               className="text-xs justify-start border-zinc-700 hover:border-[#E11D2E]"
             >
               👤 Customer
@@ -134,7 +135,7 @@ export const LoginPage: React.FC = () => {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => handleQuickDemoLogin('owner@smartspace.com', 'owner', 'Marcus Sterling (Owner)')}
+              onClick={() => handleQuickDemoLogin('owner@smartspace.com', 'owner', 'Aayush Thapa (Owner)')}
               className="text-xs justify-start border-zinc-700 hover:border-[#E11D2E]"
             >
               🏢 Space Owner
@@ -143,7 +144,7 @@ export const LoginPage: React.FC = () => {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => handleQuickDemoLogin('staff@smartspace.com', 'staff', 'David Miller (Staff)')}
+              onClick={() => handleQuickDemoLogin('staff@smartspace.com', 'staff', 'Nabin Gurung (Staff)')}
               className="text-xs justify-start border-zinc-700 hover:border-[#E11D2E]"
             >
               📋 Operations Staff
@@ -152,7 +153,7 @@ export const LoginPage: React.FC = () => {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => handleQuickDemoLogin('admin@smartspace.com', 'admin', 'Alex Vance (Admin)')}
+              onClick={() => handleQuickDemoLogin('admin@smartspace.com', 'admin', 'Pragya Shrestha (Admin)')}
               className="text-xs justify-start border-zinc-700 hover:border-[#E11D2E]"
             >
               👑 Platform Admin
@@ -166,8 +167,8 @@ export const LoginPage: React.FC = () => {
         {/* Regular Login Form Card */}
         <Card className="p-8 space-y-6">
           <div className="text-center space-y-2">
-            <div className="w-12 h-12 rounded-xl bg-[#E11D2E] flex items-center justify-center mx-auto shadow-[0_0_20px_rgba(225,29,46,0.4)]">
-              <Building2 className="w-6 h-6 text-white" />
+            <div className="mx-auto w-fit">
+              <BrandMark />
             </div>
             <h1 className="text-2xl font-bold text-white tracking-tight">Welcome Back</h1>
             <p className="text-xs text-zinc-400">Sign in to your SmartSpace account</p>

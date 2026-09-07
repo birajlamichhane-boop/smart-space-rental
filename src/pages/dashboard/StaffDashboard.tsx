@@ -96,7 +96,7 @@ export const StaffDashboard: React.FC = () => {
                         {new Date(booking.ends_at).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}
                       </td>
                       <td className="px-6 py-4 font-bold text-white">
-                        ${booking.total_price}
+                        रू {booking.total_price?.toLocaleString('en-NP')}
                       </td>
                       <td className="px-6 py-4">
                         <Badge variant={booking.status}>{booking.status}</Badge>

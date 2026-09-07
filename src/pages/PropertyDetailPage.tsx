@@ -115,7 +115,7 @@ export const PropertyDetailPage: React.FC = () => {
         </div>
         <div className="text-right hidden md:block">
           <span className="text-xs text-zinc-500 block font-medium">Starting Rate</span>
-          <span className="text-3xl font-bold text-white">${dailyRate}<span className="text-sm font-normal text-zinc-400"> / day</span></span>
+          <span className="text-3xl font-bold text-white">रू {dailyRate.toLocaleString('en-NP')}<span className="text-sm font-normal text-zinc-400"> / day</span></span>
         </div>
       </div>
 
@@ -143,15 +143,15 @@ export const PropertyDetailPage: React.FC = () => {
             <div className="grid grid-cols-3 gap-4">
               <div className="p-4 rounded-lg bg-[#0A0A0B] border border-[#262626] text-center">
                 <span className="text-xs text-zinc-400 block font-medium">Hourly Rate</span>
-                <span className="text-xl font-bold text-white mt-1 block">${hourlyRate}</span>
+                <span className="text-xl font-bold text-white mt-1 block">रू {hourlyRate.toLocaleString('en-NP')}</span>
               </div>
               <div className="p-4 rounded-lg bg-[#E11D2E]/10 border border-[#E11D2E]/30 text-center">
                 <span className="text-xs text-[#E11D2E] block font-semibold">Daily Rate</span>
-                <span className="text-xl font-bold text-white mt-1 block">${dailyRate}</span>
+                <span className="text-xl font-bold text-white mt-1 block">रू {dailyRate.toLocaleString('en-NP')}</span>
               </div>
               <div className="p-4 rounded-lg bg-[#0A0A0B] border border-[#262626] text-center">
                 <span className="text-xs text-zinc-400 block font-medium">Monthly Rate</span>
-                <span className="text-xl font-bold text-white mt-1 block">${monthlyRate}</span>
+                <span className="text-xl font-bold text-white mt-1 block">रू {monthlyRate.toLocaleString('en-NP')}</span>
               </div>
             </div>
           </Card>

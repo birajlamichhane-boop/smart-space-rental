@@ -78,15 +78,17 @@ export const ProfilePage: React.FC = () => {
             label="Full Name"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            placeholder="John Doe"
+            placeholder="Sita Sharma"
             required
           />
 
           <Input
             label="Phone Number"
+            type="tel"
+            inputMode="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            placeholder="+1 (555) 000-0000"
+            placeholder="+977 9812345678"
           />
 
           <div>
